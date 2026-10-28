@@ -25,6 +25,15 @@ def shot(page, name, full=False):
     print("saved", name)
 
 
+def focus_accordion(page, label, open_it=False):
+    """Scroll an accordion heading to the top of the viewport (optionally opening it first)."""
+    head = page.get_by_text(label, exact=True).first
+    if open_it:
+        head.click(); time.sleep(1.2)
+    head.evaluate("e => e.closest('.label-wrap, button, .block') ? e.closest('.label-wrap, button, .block').scrollIntoView({block: 'start'}) : e.scrollIntoView({block: 'start'})")
+    time.sleep(0.8)
+
+
 def swagger_try(page, base, body, name, op="operations-default-analyze_api_analyze_post"):
     page.goto(f"{base}/docs", wait_until="networkidle")
     page.click(f"#{op} .opblock-summary")
@@ -62,14 +71,9 @@ with sync_playwright() as p:
             time.sleep(1.5)
             shot(page, name)
             if idx == "01":
-                page.get_by_text("Runbook passages used (RAG sources)").click(); time.sleep(1)
-                page.get_by_text("Runbook passages used (RAG sources)").scroll_into_view_if_needed(); time.sleep(0.5)
-                shot(page, "ui_sources.png")
-                page.get_by_text("Incident report (Markdown)").scroll_into_view_if_needed(); time.sleep(0.5)
-                shot(page, "ui_report.png")
-                page.get_by_text("Workflow trace and raw JSON").click(); time.sleep(1)
-                page.get_by_text("Workflow trace and raw JSON").scroll_into_view_if_needed(); time.sleep(0.5)
-                shot(page, "ui_trace.png")
+                focus_accordion(page, "Runbook passages used (RAG sources)", open_it=True); shot(page, "ui_sources.png")
+                focus_accordion(page, "Incident report (Markdown)"); shot(page, "ui_report.png")
+                focus_accordion(page, "Workflow trace and raw JSON", open_it=True); shot(page, "ui_trace.png")
         page.goto(args.base, wait_until="networkidle")
         page.get_by_role("tab", name="Model comparison").click(); time.sleep(1.5); shot(page, "ui_comparison_tab.png")
         page.get_by_role("tab", name="Architecture").click(); time.sleep(1); shot(page, "ui_architecture_tab.png")
