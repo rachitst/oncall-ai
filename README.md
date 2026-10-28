@@ -9,6 +9,7 @@
 
 | | |
 |---|---|
+| Source code | https://github.com/rachitst/oncall-ai |
 | Live demo | _(add Hugging Face Space URL)_ |
 | Fine-tuned model | _(add Hugging Face model URL)_ |
 | API docs | `<space-url>/docs` |
