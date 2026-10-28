@@ -25,6 +25,11 @@ Paste a log excerpt, stack trace or alert. OnCall AI will:
 **Concepts from the lab:** LoRA/QLoRA fine-tuning & 4-bit quantization (Exp 2-3), multi-file RAG with a vector index (Exp 4-5),
 LangGraph stateful workflow (Exp 6), FastAPI service with validation, error handling, logging, latency measurement and cloud LLM deployment (Exp 7).
 
+**Links:** source [github.com/rachitst/oncall-ai](https://github.com/rachitst/oncall-ai) ·
+fine-tuned model [huggingface.co/rachitst/oncall-ai-incident-classifier](https://huggingface.co/rachitst/oncall-ai-incident-classifier) ·
+live demo [rachitst--oncall-ai-web.us-east.modal.run](https://rachitst--oncall-ai-web.us-east.modal.run) (Modal, serverless CPU) ·
+API docs at `/docs`.
+
 **Author:** Rachit Manish Chheda (UID 2024301004) - LLM Production & Deployment, ESE mini project.
 """
 
@@ -143,7 +148,7 @@ def build_ui() -> gr.Blocks:
 **Classifier:** Qwen2.5-0.5B-Instruct fine-tuned with QLoRA (4-bit NF4 base, LoRA r=16 on attention/MLP projections), adapter merged for CPU inference.
 **Knowledge base:** 12 runbooks (Markdown), severity policy / report template / postmortem guidelines (TXT), known-error database (CSV) → 100+ chunks, all-MiniLM-L6-v2 embeddings, FAISS IndexFlatL2.
 **LLM:** Groq cloud API (OpenAI-compatible) for root-cause analysis and report drafting, with JSON-mode outputs, timeouts, one retry and error mapping.
-**Service:** FastAPI (`/api/analyze`, `/health`, `/docs`) with validation, request IDs, response-time headers, rotating logs and secret redaction; Gradio UI mounted on the same process; deployed on Hugging Face Spaces (Docker).
+**Service:** FastAPI (`/api/analyze`, `/health`, `/docs`) with validation, request IDs, response-time headers, rotating logs and secret redaction; Gradio UI mounted on the same process; deployed as a container on Modal (serverless CPU; Dockerfile also targets Hugging Face Spaces).
 """)
             with gr.Tab("About"):
                 gr.Markdown(ABOUT)

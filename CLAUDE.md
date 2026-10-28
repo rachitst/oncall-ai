@@ -30,5 +30,5 @@ CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DIS
 - [x] GitHub repo pushed (public): https://github.com/rachitst/oncall-ai (Space + model links still to fill)
 - [ ] Colab notebook run: results/comparison.json + figures committed; model on HF Hub
 - [ ] Local server runs with CLASSIFIER_BACKEND=finetuned (model loads on CPU)
-- [ ] Hugging Face Space deployed, /health OK, smoke test passes against the Space URL
+- [x] Deployed on Modal (HF Spaces needs PRO for Docker/Gradio on CPU -> 402): https://rachitst--oncall-ai-web.us-east.modal.run ; /health OK, smoke test 11/11 PASS (currently CLASSIFIER_BACKEND=llm until the model is on the Hub; redeploy with MODAL_CLASSIFIER_BACKEND unset = finetuned)
 - [ ] Screenshots captured per docs/REPORT_STRUCTURE.md

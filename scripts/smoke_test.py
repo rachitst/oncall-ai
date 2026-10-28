@@ -1,6 +1,7 @@
 """End-to-end check of a running OnCall AI server (local or deployed).
 
-Usage: python scripts/smoke_test.py [http://127.0.0.1:7860]
+Usage: python scripts/smoke_test.py [http://127.0.0.1:7860] [results/smoke_test.json]
+Env: SMOKE_PAUSE_S=<seconds> waits between samples (free-tier LLM providers throttle bursts; per-request latency is unaffected).
 Runs the sample incidents, a validation error and a wrong-method request, and prints a results table that can go
 into the report. Saves results/smoke_test.json.
 """
@@ -9,14 +10,19 @@ import httpx
 
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:7860").rstrip("/")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "results", "smoke_test.json")
+PAUSE = float(os.getenv("SMOKE_PAUSE_S", "0"))
 EXPECTED = {"01": ("database_connection_exhausted", {"P1"}), "02": ("out_of_memory", {"P2", "P3"}), "03": ("tls_certificate_expired", {"P1"}),
             "04": ("application_exception", {"P4", "P3"}), "05": ("kubernetes_crashloop", {"P2"}), "06": ("rate_limit_exceeded", {"P2"})}
 rows, records = [], []
-r = httpx.get(f"{BASE}/health", timeout=60)
-print("health:", r.status_code, r.json())
+r = httpx.get(f"{BASE}/health", timeout=120)
+health = r.json()
+print("health:", r.status_code, health)
 rows.append(("GET /health", "200 ok", f"{r.status_code} {r.json().get('status')}", r.status_code == 200))
 for name in sorted(os.listdir(os.path.join(ROOT, "data", "samples"))):
     log = open(os.path.join(ROOT, "data", "samples", name)).read()
+    if PAUSE and records:
+        time.sleep(PAUSE)
     t0 = time.perf_counter()
     r = httpx.post(f"{BASE}/api/analyze", json={"log_text": log}, timeout=180)
     ms = (time.perf_counter() - t0) * 1000
@@ -35,7 +41,8 @@ rows.append(("GET /api/analyze", "405", str(r.status_code), r.status_code == 405
 print(f"\n{'Test':36s} {'Expected':40s} {'Pass':5s} Actual")
 for name, exp, act, ok in rows:
     print(f"{name:36s} {exp:40s} {'PASS' if ok else 'FAIL':5s} {act}")
-os.makedirs(os.path.join(ROOT, "results"), exist_ok=True)
-json.dump({"base_url": BASE, "rows": [dict(test=n, expected=e, actual=a, passed=o) for n, e, a, o in rows], "records": records},
-          open(os.path.join(ROOT, "results", "smoke_test.json"), "w"), indent=2)
+os.makedirs(os.path.dirname(OUT), exist_ok=True)
+json.dump({"base_url": BASE, "health": health, "pause_s": PAUSE, "rows": [dict(test=n, expected=e, actual=a, passed=o) for n, e, a, o in rows],
+           "records": records}, open(OUT, "w"), indent=2)
+print("saved", OUT)
 sys.exit(0 if all(o for *_, o in rows) else 1)

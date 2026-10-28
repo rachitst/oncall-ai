@@ -10,9 +10,9 @@
 | | |
 |---|---|
 | Source code | https://github.com/rachitst/oncall-ai |
-| Live demo | _(add Hugging Face Space URL)_ |
+| Live demo | https://rachitst--oncall-ai-web.us-east.modal.run (Modal, serverless CPU; first request after idle takes ~30 s) |
 | Fine-tuned model | _(add Hugging Face model URL)_ |
-| API docs | `<space-url>/docs` |
+| API docs | https://rachitst--oncall-ai-web.us-east.modal.run/docs |
 
 ## Concepts covered (from the lab experiments)
 
@@ -47,7 +47,7 @@ eval/           chart generation from results/comparison.json
 results/        comparison.json, figures/, predictions, smoke-test output (committed after training)
 tests/          pytest suite (offline: mock LLM, hash embeddings, rules classifier)
 scripts/        run_local.sh, smoke_test.py
-deploy/         Hugging Face Space README (Docker SDK)
+deploy/         Modal deployment (modal_app.py) and Hugging Face Space README (Docker SDK)
 docs/           report outline
 ```
 
@@ -74,11 +74,23 @@ Open `training/OnCall_AI_Training.ipynb` in Colab → GPU runtime → add secret
 writes `results/comparison.json` + charts, merges the QLoRA adapter and pushes the model to the Hub.
 Then commit `results/` to this repository and set `FINETUNED_MODEL=<hf-repo>` in the deployment.
 
-## Deployment (Hugging Face Spaces, Docker, free CPU)
+## Deployment
 
-1. Create a Space (SDK: **Docker**), copy `deploy/README_SPACE.md` to the Space as `README.md`, push this repository's files.
-2. Space settings → Secrets: `LLM_API_KEY`; Variables: `FINETUNED_MODEL`, `CLASSIFIER_BACKEND=finetuned`, `CLASSIFIER_FALLBACK=llm`, `LLM_MODEL=qwen/qwen3.8-27b`, `LLM_BASE_URL=https://api.groq.com/openai/v1`.
-3. The container starts `uvicorn app.api:app --port 7860`; `/health` reports the loaded components.
+**Modal (used for the live demo).** Hugging Face Spaces now require a PRO plan for Docker/Gradio Spaces on CPU, so the
+same container (python 3.11, CPU torch, `requirements.txt`) is served from Modal's free tier: `deploy/modal_app.py`.
+
+```bash
+modal setup                                             # one-time browser login
+modal secret create oncall-ai LLM_API_KEY=<groq key>    # the only secret; variables live in deploy/modal_app.py
+modal deploy deploy/modal_app.py                        # -> https://<workspace>--oncall-ai-web.modal.run
+```
+
+2 vCPU / 4 GB, Hugging Face downloads cached in a Modal Volume, container kept warm 10 min after the last request.
+
+**Hugging Face Spaces (Docker SDK, needs PRO).** `python scripts/deploy_space.py` uploads the tracked files with
+`deploy/README_SPACE.md` as the Space README and sets the secret `LLM_API_KEY` plus the variables `FINETUNED_MODEL`,
+`CLASSIFIER_BACKEND=finetuned`, `CLASSIFIER_FALLBACK=llm`, `LLM_MODEL=qwen/qwen3.8-27b`, `LLM_BASE_URL`.
+The `Dockerfile` starts `uvicorn app.api:app --port 7860`; `/health` reports the loaded components.
 
 ## API
 
