@@ -65,8 +65,9 @@ hf_cache = modal.Volume.from_name(f"{APP_NAME}-hf-cache", create_if_missing=True
     memory=4096,
     timeout=600,
     scaledown_window=600,                            # keep a warm container for 10 min after the last request
-)
-@modal.concurrent(max_inputs=8)
+    max_containers=1,                                # Gradio's queue/session state lives in one process: never split
+)                                                    # a browser session across containers (otherwise 404s in the UI)
+@modal.concurrent(max_inputs=100)                    # SSE connections (heartbeat, queue) are long-lived inputs
 @modal.asgi_app()
 def web():
     import sys
