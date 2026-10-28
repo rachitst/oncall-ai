@@ -1,0 +1,4 @@
+2026-10-27T12:00:01.000Z INFO  catalog-api health check ok (uptime 71h)
+2026-10-27T12:00:02.000Z INFO  catalog-api GET /api/v1/items 200 88ms
+2026-10-27T12:00:03.000Z DEBUG catalog-api cache hit ratio 97%
+2026-10-27T12:00:04.000Z INFO  catalog-api scheduled job 'cleanup' finished in 412ms

@@ -1,0 +1,27 @@
+ONCALL SEVERITY POLICY (ShopNest Platform Team)
+
+P1 - CRITICAL. Definition: a production outage, data loss or security breach affecting all or most users, or a core
+business flow (checkout, payment, login) failing. Examples: primary database down, public TLS certificate expired,
+502 on all upstreams, disk full on a database host. Response: page the on-call engineer immediately, acknowledge
+within 5 minutes, open an incident channel and a status page entry, update stakeholders every 30 minutes.
+Postmortem required within 5 business days.
+
+P2 - MAJOR. Definition: production degraded for a significant subset of users or a non-core flow failing; the system
+works with retries or at reduced capacity. Examples: error rate 5-50% on some replicas, OOM restarts on one service,
+p99 latency far above SLO, a deployment rolled back after partial failure. Response: respond within 30 minutes during
+on-call hours; status page entry if customer-visible; postmortem recommended.
+
+P3 - MINOR. Definition: limited impact, a single host or replica, an issue in staging that blocks testing, intermittent
+errors with successful retries, or an issue that self-recovered. Response: handle during working hours; create a
+ticket; no page outside working hours.
+
+P4 - LOW. Definition: informational events, single occurrences in dev, rates within the normal baseline, events already
+auto-resolved with no user impact. Response: log for the record; review in the weekly operations meeting.
+
+ESCALATION RULES. Any incident on a customer-facing production path with revenue impact is at least P2. Security
+incidents (successful unauthorised access, credential leak) are P1 regardless of user impact and must be escalated to
+the security team. If the on-call engineer cannot restore service within 30 minutes for a P1, escalate to the service
+owner and the engineering manager.
+
+COMMUNICATION. Incident channel naming: #inc-<date>-<service>. Status updates: every 30 minutes for P1, hourly for P2.
+Never share secrets, tokens or customer personal data in the incident channel or in the incident report.

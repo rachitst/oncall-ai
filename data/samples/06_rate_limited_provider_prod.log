@@ -1,0 +1,4 @@
+2026-10-27T11:05:31.207Z WARN  payments-svc HTTP 429 Too Many Requests from https://api.razorpay.example/v1/charges (retry-after: 12s)
+2026-10-27T11:05:31.209Z WARN  payments-svc provider rate limit hit: 1840 requests in 60s (limit 1000)
+2026-10-27T11:05:33.400Z WARN  payments-svc backing off 2s before retry (512 throttled calls in last minute)
+2026-10-27T11:05:40.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 18% of users

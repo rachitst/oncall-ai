@@ -1,0 +1,20 @@
+INCIDENT REPORT TEMPLATE
+
+Title: <service>: <short description>
+Severity: P1 | P2 | P3 | P4
+Status: Investigating | Identified | Monitoring | Resolved
+Detected at: <timestamp>   Reported by: <alert or person>
+Affected services and environment: <list>
+User impact: <who was affected, how, for how long>
+
+Summary: Two or three sentences describing what happened in plain language.
+
+Timeline: chronological list of detection, key findings, mitigation steps and recovery, each with a timestamp.
+
+Root cause: the underlying technical cause, distinguished from the trigger and from contributing factors.
+
+Mitigation applied: what was done to restore service.
+
+Permanent fix / action items: owner, action, due date for each.
+
+Lessons learned: what to detect earlier next time, what to automate, what documentation to improve.

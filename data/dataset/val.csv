@@ -1,0 +1,762 @@
+id,log_text,incident_type,severity,environment
+inc-1114,"2026-06-27T03:01:05.000Z WARN  kubelet Liveness probe failed: Get ""http://10.0.41.43:8080/health"": dial tcp 10.0.41.43:8080: connect: connection refused
+2026-06-27T03:01:10.000Z INFO  kubelet Container search-api failed liveness probe, will be restarted
+2026-06-27T03:01:13.000Z INFO  kubectl search-api-6253b5af5a 0/1 CrashLoopBackOff 889 37m
+2026-06-27T03:01:16.000Z ALERT monitor [prod] search-api: error rate 22% on 3 of 8 hosts; some users affected",kubernetes_crashloop,P2,prod
+inc-0056,"2026-02-10T04:55:07.000Z ERROR checkout-api 403 Forbidden: service account checkout-api@shopnest.iam does not have permission storage.objects.get on bucket shopnest-dev-assets
+2026-02-10T04:55:08.000Z INFO  checkout-api POST /api/v1/orders 201 7237ms
+2026-02-10T04:55:16.000Z ERROR checkout-api google.api_core.exceptions.Forbidden: 403 GET https://storage.googleapis.com/...: Access denied
+2026-02-10T04:55:25.000Z INFO  monitor [dev] single occurrence on dev host db-primary-43; no users on this environment",authentication_failure,P4,dev
+inc-0796,"2026-05-21T20:07:08.000Z ERROR order-worker Traceback (most recent call last):
+2026-05-21T20:07:13.000Z INFO  order-worker health check ok (uptime 34h)
+2026-05-21T20:07:19.000Z INFO  order-worker GET /api/v1/items 200 8275ms
+2026-05-21T20:07:26.000Z ERROR order-worker   File ""/app/services/user.py"", line 34, in display_name
+2026-05-21T20:07:28.000Z ERROR order-worker     return user.profile.name.strip()
+2026-05-21T20:07:35.000Z ERROR order-worker AttributeError: 'NoneType' object has no attribute 'strip'
+2026-05-21T20:07:37.000Z INFO  monitor [staging] order-worker: 262 errors in the last hour on 1 host; no customer impact reported",application_exception,P3,staging
+inc-0552,"2026-04-01T08:58:02.000Z ERROR notification-svc socket.gaierror: [Errno -3] Temporary failure in name resolution (host=api.shopnest.in)
+2026-04-01T08:58:06.000Z INFO  notification-svc POST /api/v1/orders 201 27123ms
+2026-04-01T08:58:15.000Z ERROR notification-svc requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.shopnest.in', port=443): Max retries exceeded
+2026-04-01T08:58:20.000Z CRIT  monitor [prod] primary database unavailable; all write traffic failing on 12 nodes",dns_resolution_failure,P1,prod
+inc-0495,"2026-05-09T18:27:04.000Z ERROR search-api requests.exceptions.SSLError: HTTPSConnectionPool(host='payments.shopnest.in', port=443): Max retries exceeded (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1006)')))
+2026-05-09T18:27:09.000Z INFO  monitor [dev] search-api: 753 errors in the last hour on 1 host; no customer impact reported
+2026-05-09T18:27:14.000Z INFO  search-api GET /api/v1/items 200 28690ms",tls_certificate_expired,P3,dev
+inc-0999,"[error] 64014#0: *15 SSL_do_handshake() failed (SSL: error:0A000415:SSL routines::sslv3 alert certificate expired) while SSL handshaking to upstream, upstream: ""https://search.internal:443/""
+INFO  monitor [dev] single occurrence on dev host ip-10-0-106-133; no users on this environment",tls_certificate_expired,P4,dev
+inc-0152,"2026-06-18T14:58:02.000Z ERROR report-worker curl: (6) Could not resolve host: api.shopnest.in
+2026-06-18T14:58:09.000Z INFO  report-worker scheduled job 'cleanup' finished in 10279ms
+2026-06-18T14:58:18.000Z WARN  resolver NXDOMAIN for api.shopnest.in (ttl 0)
+2026-06-18T14:58:25.000Z DEBUG monitor [dev] seen once during local test run by developer; informational",dns_resolution_failure,P4,dev
+inc-0676,"2026-10-08T05:04:09.000Z ERROR order-worker curl: (6) Could not resolve host: search.internal
+2026-10-08T05:04:11.000Z WARN  resolver NXDOMAIN for search.internal (ttl 0)
+2026-10-08T05:04:13.000Z INFO  order-worker POST /api/v1/orders 201 6536ms
+2026-10-08T05:04:18.000Z WARN  oncall [prod] degraded: order-worker succeeding after retries, p95 latency elevated for 100% of users",dns_resolution_failure,P2,prod
+inc-1118,"FATAL postgres[41099]: FATAL:  sorry, too many clients already
+FATAL postgres[41099]: FATAL:  remaining connection slots are reserved for non-replication superuser connections
+ERROR catalog-api psycopg2.OperationalError: FATAL:  too many connections for role ""app""
+CRIT  monitor [prod] primary database unavailable; all write traffic failing on 8 nodes",database_connection_exhausted,P1,prod
+inc-0986,"[error] 6824#0: *48 upstream prematurely closed connection while reading response header from upstream, client: 174.60.159.135, server: redis.internal, request: ""POST /api/v1/checkout HTTP/1.1""
+174.60.159.135 - - ""POST /api/v1/checkout HTTP/1.1"" 502 0
+INFO  monitor [prod] non-production environment prod; QA test run affected only",upstream_gateway_error,P3,prod
+inc-1105,"kernel: [31869.20] Out of memory: Killed process 31869 (uvicorn) total-vm:4155500kB, anon-rss:1619143kB, file-rss:0kB
+kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,task=uvicorn,pid=31869
+INFO  auth-gateway GET /api/v1/items 200 2548ms
+systemd[1]: auth-gateway.service: Main process exited, code=killed, status=9/KILL
+ALERT statuspage [prod] incident opened: auth-gateway down, 100% of requests failing since 2026-10-09T01:40:19.000Z
+INFO  auth-gateway GET /api/v1/items 200 2548ms",out_of_memory,P1,prod
+inc-0407,"ERROR catalog-api write /data/uploads/fe1aea2c2c.tmp: ENOSPC: no space left on device
+WARN  node_exporter filesystem /data inodes_free=0 avail_bytes=0
+INFO  monitor [staging] non-production environment staging; QA test run affected only",disk_space_full,P3,staging
+inc-0811,"205.108.126.242 - - ""POST /api/v1/login HTTP/1.1"" 429 85 ""-"" ""python-requests/2.31""
+WARN  api-gateway rate limit exceeded for client 205.108.126.242: 6 req/min > 500 req/min, throttling
+INFO  auth-gateway scheduled job 'cleanup' finished in 19174ms
+DEBUG auth-gateway cache hit ratio 99%
+WARN  monitor [prod] background jobs for auth-gateway delayed by 34 min; customer-facing API healthy",rate_limit_exceeded,P2,prod
+inc-0548,"2026-07-07T23:40:08.000Z WARN  kubelet Liveness probe failed: Get ""http://10.0.118.222:8080/health"": dial tcp 10.0.118.222:8080: connect: connection refused
+2026-07-07T23:40:10.000Z INFO  kubelet Container recommendation-svc failed liveness probe, will be restarted
+2026-07-07T23:40:11.000Z DEBUG recommendation-svc cache hit ratio 87%
+2026-07-07T23:40:12.000Z INFO  kubectl recommendation-svc-6dbfc3e5bc 0/1 CrashLoopBackOff 152 45m
+2026-07-07T23:40:15.000Z INFO  recommendation-svc health check ok (uptime 45h)
+2026-07-07T23:40:23.000Z DEBUG monitor [dev] seen once during local test run by developer; informational",kubernetes_crashloop,P4,dev
+inc-0715,"2026-02-23T20:35:09.000Z ERROR checkout-api Unhandled exception in request POST /api/v1/payments: TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'
+2026-02-23T20:35:14.000Z ERROR checkout-api   File ""/app/api/payments.py"", line 23, in apply_discount
+2026-02-23T20:35:23.000Z ALERT oncall [prod] 12/12 replicas affected, customer-facing API returning errors, revenue impact",application_exception,P1,prod
+inc-0395,"2026-05-24T09:40:01.000Z ERROR deploy-bot Deployment ""notification-svc"" exceeded its progress deadline (progressDeadlineSeconds=600)
+2026-05-24T09:40:09.000Z INFO  deploy-bot rolling back notification-svc to revision 3
+2026-05-24T09:40:17.000Z INFO  monitor [dev] single occurrence on dev host worker-03; no users on this environment",deployment_failure,P4,dev
+inc-0122,"2026-09-17T06:15:03.000Z ERROR billing-cron grpc: rpc error: code = DeadlineExceeded desc = context deadline exceeded (timeout 30s) calling inventory.Reserve
+2026-09-17T06:15:10.000Z WARN  billing-cron 90 requests exceeded deadline in the last minute
+2026-09-17T06:15:18.000Z INFO  monitor [prod] non-production environment prod; QA test run affected only
+2026-09-17T06:15:19.000Z INFO  billing-cron scheduled job 'cleanup' finished in 16446ms",high_latency_timeout,P3,prod
+inc-0729,"2026-06-28T12:22:01.000Z ERROR payments-svc Traceback (most recent call last):
+2026-06-28T12:22:03.000Z ERROR payments-svc   File ""/app/services/user.py"", line 38, in display_name
+2026-06-28T12:22:05.000Z ERROR payments-svc     return user.profile.name.strip()
+2026-06-28T12:22:08.000Z ERROR payments-svc AttributeError: 'NoneType' object has no attribute 'strip'
+2026-06-28T12:22:09.000Z INFO  monitor [prod] payments-svc recovered automatically after 38 min; error rate back to 0.89%",application_exception,P3,prod
+inc-0020,"2026-05-18T00:50:05.000Z [error] 43819#0: *8 connect() failed (111: Connection refused) while connecting to upstream, client: 87.121.244.221, server: cdn.shopnest.in, request: ""GET /api/v1/cart HTTP/1.1"", upstream: ""http://10.0.75.192:8080/api/v1/cart""
+2026-05-18T00:50:10.000Z 87.121.244.221 - - ""GET /api/v1/cart HTTP/1.1"" 502 157 ""-"" ""Mozilla/5.0""
+2026-05-18T00:50:11.000Z INFO  kubelet Successfully pulled image for recommendation-svc
+2026-05-18T00:50:14.000Z WARN  oncall [prod] degraded: recommendation-svc succeeding after retries, p95 latency elevated for 96% of users
+2026-05-18T00:50:21.000Z INFO  recommendation-svc connection to cdn.shopnest.in established",upstream_gateway_error,P2,prod
+inc-0305,"2026-09-01T17:59:04.000Z WARN  report-worker HTTP 429 Too Many Requests from https://db.internal/v1/charges (retry-after: 47s)
+2026-09-01T17:59:06.000Z WARN  report-worker provider rate limit hit: 273 requests in 60s (limit 200)
+2026-09-01T17:59:13.000Z INFO  kubelet Successfully pulled image for report-worker
+2026-09-01T17:59:18.000Z INFO  monitor [dev] single occurrence on dev host worker-47; no users on this environment
+2026-09-01T17:59:22.000Z INFO  report-worker scheduled job 'cleanup' finished in 849ms",rate_limit_exceeded,P4,dev
+inc-0290,"2026-09-23T10:17:06.000Z ERROR catalog-api requests.exceptions.SSLError: HTTPSConnectionPool(host='payments.shopnest.in', port=443): Max retries exceeded (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1006)')))
+2026-09-23T10:17:10.000Z INFO  monitor [dev] non-production environment dev; QA test run affected only
+2026-09-23T10:17:11.000Z INFO  catalog-api GET /api/v1/items 200 20984ms",tls_certificate_expired,P3,dev
+inc-1070,"WARN  kubelet Back-off restarting failed container recommendation-svc in pod recommendation-svc-c08acfbadc_dev
+INFO  kubectl pod recommendation-svc-c08acfbadc status CrashLoopBackOff restarts=136 age=7m
+INFO  oncall [staging] intermittent; 136 occurrences today, retries succeed, no SLA impact
+INFO  recommendation-svc connection to db.internal established",kubernetes_crashloop,P3,staging
+inc-0353,"2026-09-26T03:31:05.000Z [error] 13813#0: *46 upstream prematurely closed connection while reading response header from upstream, client: 204.207.155.212, server: db.internal, request: ""POST /api/v1/checkout HTTP/1.1""
+2026-09-26T03:31:12.000Z DEBUG user-service cache hit ratio 88%
+2026-09-26T03:31:13.000Z 204.207.155.212 - - ""POST /api/v1/checkout HTTP/1.1"" 502 0
+2026-09-26T03:31:19.000Z INFO  user-service health check ok (uptime 46h)
+2026-09-26T03:31:24.000Z WARN  monitor [prod] background jobs for user-service delayed by 46 min; customer-facing API healthy",upstream_gateway_error,P2,prod
+inc-0787,"2026-08-04T04:21:08.000Z ERROR notification-svc socket.gaierror: [Errno -3] Temporary failure in name resolution (host=cdn.shopnest.in)
+2026-08-04T04:21:09.000Z ERROR notification-svc requests.exceptions.ConnectionError: HTTPSConnectionPool(host='cdn.shopnest.in', port=443): Max retries exceeded
+2026-08-04T04:21:15.000Z INFO  notification-svc scheduled job 'cleanup' finished in 25957ms
+2026-08-04T04:21:24.000Z INFO  monitor [staging] single occurrence on dev host node-43; no users on this environment",dns_resolution_failure,P4,staging
+inc-1196,"2026-09-25T19:55:07.000Z LOG   postgres[36264]: duration: 1358.19 ms  statement: SELECT * FROM orders o JOIN order_items i ON i.order_id = o.id WHERE o.user_id = $1
+2026-09-25T19:55:10.000Z WARN  auth-gateway slow query detected (1358ms) on db=users_db; lock_wait=15265ms
+2026-09-25T19:55:15.000Z WARN  oncall [prod] degraded: auth-gateway succeeding after retries, p95 latency elevated for 95% of users
+2026-09-25T19:55:24.000Z INFO  auth-gateway POST /api/v1/orders 201 15265ms",high_latency_timeout,P2,prod
+inc-1157,"2026-02-25T20:02:02.000Z FATAL postgres[31135]: FATAL:  sorry, too many clients already
+2026-02-25T20:02:07.000Z FATAL postgres[31135]: FATAL:  remaining connection slots are reserved for non-replication superuser connections
+2026-02-25T20:02:09.000Z ERROR checkout-api psycopg2.OperationalError: FATAL:  too many connections for role ""app""
+2026-02-25T20:02:15.000Z INFO  checkout-api health check ok (uptime 23h)
+2026-02-25T20:02:24.000Z INFO  checkout-api health check ok (uptime 23h)
+2026-02-25T20:02:31.000Z INFO  monitor [dev] single occurrence on dev host ip-10-0-192-139; no users on this environment",database_connection_exhausted,P4,dev
+inc-0053,"ERROR inventory-api Traceback (most recent call last):
+ERROR inventory-api   File ""/app/workers/uvicorn.py"", line 42, in build_batch
+ERROR inventory-api MemoryError: Unable to allocate 3 GiB for an array with shape (2192687, 512)
+INFO  monitor [prod] inventory-api recovered automatically after 42 min; error rate back to 0.19%",out_of_memory,P3,prod
+inc-0753,"2026-02-11T23:27:01.000Z WARN  auth-gateway ThrottlingException: Rate exceeded (Service: AmazonSQS; Status Code: 400; Error Code: Throttling)
+2026-02-11T23:27:05.000Z INFO  auth-gateway POST /api/v1/orders 201 1244ms
+2026-02-11T23:27:11.000Z INFO  auth-gateway connection to cdn.shopnest.in established
+2026-02-11T23:27:15.000Z WARN  auth-gateway backing off 7s before retry (11 throttled calls in last minute)
+2026-02-11T23:27:24.000Z ALERT oncall [prod] 8/8 replicas affected, customer-facing API returning errors, revenue impact",rate_limit_exceeded,P1,prod
+inc-1179,"ERROR inventory-api OSError: [Errno 28] No space left on device: '/var/log/inventory-api/app.log'
+CRIT  inventory-api disk usage on /var is 87% (57G used, 0G free)
+INFO  oncall [prod] intermittent; 401 occurrences today, retries succeed, no SLA impact",disk_space_full,P3,prod
+inc-0412,"2026-03-06T00:30:09.000Z ERROR user-service socket.gaierror: [Errno -3] Temporary failure in name resolution (host=payments.shopnest.in)
+2026-03-06T00:30:11.000Z ERROR user-service requests.exceptions.ConnectionError: HTTPSConnectionPool(host='payments.shopnest.in', port=443): Max retries exceeded
+2026-03-06T00:30:20.000Z ALERT oncall [prod] 6/6 replicas affected, customer-facing API returning errors, revenue impact
+2026-03-06T00:30:23.000Z INFO  user-service GET /api/v1/items 200 2302ms",dns_resolution_failure,P1,prod
+inc-0226,"2026-04-20T06:12:07.000Z WARN  coredns [ERROR] plugin/errors: 2 redis.internal. A: read udp 10.0.35.110:27296->10.0.0.2:53: i/o timeout
+2026-04-20T06:12:13.000Z INFO  checkout-api health check ok (uptime 46h)
+2026-04-20T06:12:16.000Z ERROR checkout-api dial tcp: lookup redis.internal on 10.0.0.10:53: server misbehaving
+2026-04-20T06:12:17.000Z INFO  monitor [staging] checkout-api: 98 errors in the last hour on 1 host; no customer impact reported",dns_resolution_failure,P3,staging
+inc-0061,"2026-07-24T15:17:02.000Z ERROR report-worker java.lang.OutOfMemoryError: Java heap space
+2026-07-24T15:17:04.000Z ERROR report-worker 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+2026-07-24T15:17:13.000Z ERROR report-worker 	at com.shopnest.report.Exporter.buildRows(Exporter.java:8)
+2026-07-24T15:17:21.000Z INFO  report-worker POST /api/v1/orders 201 25195ms
+2026-07-24T15:17:29.000Z INFO  oncall [staging] intermittent; 511 occurrences today, retries succeed, no SLA impact",out_of_memory,P3,staging
+inc-0142,"[error] 46375#0: *27 connect() failed (111: Connection refused) while connecting to upstream, client: 87.85.70.127, server: sso.internal, request: ""GET /api/v1/cart HTTP/1.1"", upstream: ""http://10.0.143.208:8080/api/v1/cart""
+87.85.70.127 - - ""GET /api/v1/cart HTTP/1.1"" 502 157 ""-"" ""Mozilla/5.0""
+ALERT statuspage [prod] incident opened: inventory-api down, 100% of requests failing since 2026-06-28T18:32:07.000Z
+INFO  inventory-api GET /api/v1/items 200 24304ms",upstream_gateway_error,P1,prod
+inc-1160,"2026-03-04T20:12:07.000Z [error] 48021#0: *35 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 157.174.251.201, server: search.internal, request: ""GET /api/v1/search?q=shoes HTTP/1.1""
+2026-03-04T20:12:09.000Z 157.174.251.201 - - ""GET /api/v1/search?q=shoes HTTP/1.1"" 504 0
+2026-03-04T20:12:17.000Z INFO  oncall [dev] intermittent; 870 occurrences today, retries succeed, no SLA impact",upstream_gateway_error,P3,dev
+inc-0492,"2026-09-07T00:43:04.000Z FATAL postgres[6831]: FATAL:  sorry, too many clients already
+2026-09-07T00:43:05.000Z DEBUG checkout-api cache hit ratio 95%
+2026-09-07T00:43:14.000Z FATAL postgres[6831]: FATAL:  remaining connection slots are reserved for non-replication superuser connections
+2026-09-07T00:43:16.000Z ERROR checkout-api psycopg2.OperationalError: FATAL:  too many connections for role ""app""
+2026-09-07T00:43:21.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",database_connection_exhausted,P3,staging
+inc-0940,"2026-02-09T07:43:06.000Z ERROR inventory-api httpx.ReadTimeout: timed out after 10s waiting for https://db.internal/v1/quote
+2026-02-09T07:43:09.000Z WARN  inventory-api upstream response time p95=4492ms p99=7202ms (baseline 120ms)
+2026-02-09T07:43:17.000Z INFO  monitor [dev] inventory-api: 402 errors in the last hour on 1 host; no customer impact reported",high_latency_timeout,P3,dev
+inc-0669,"2026-10-10T04:39:01.000Z ERROR deploy-bot Deployment ""billing-cron"" exceeded its progress deadline (progressDeadlineSeconds=600)
+2026-10-10T04:39:03.000Z INFO  deploy-bot rolling back billing-cron to revision 18
+2026-10-10T04:39:04.000Z INFO  monitor [staging] billing-cron recovered automatically after 18 min; error rate back to 0.84%
+2026-10-10T04:39:09.000Z INFO  billing-cron scheduled job 'cleanup' finished in 24973ms",deployment_failure,P3,staging
+inc-0782,"2026-07-10T17:38:01.000Z ERROR checkout-api x509: certificate has expired or is not yet valid: current time 2026-07-10T17:38:01.000Z is after 2026-04-01T00:00:00Z
+2026-07-10T17:38:02.000Z ERROR checkout-api Get ""https://auth.shopnest.in/v1/token"": x509: certificate has expired
+2026-07-10T17:38:06.000Z INFO  monitor [dev] single occurrence on dev host node-03; no users on this environment",tls_certificate_expired,P4,dev
+inc-0501,"ERROR auth-gateway requests.exceptions.SSLError: HTTPSConnectionPool(host='sso.internal', port=443): Max retries exceeded (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1006)')))
+ALERT monitor [prod] auth-gateway: error rate 31% on 2 of 8 hosts; some users affected",tls_certificate_expired,P2,prod
+inc-1061,"2026-06-01T20:21:08.000Z ERROR payments-svc Traceback (most recent call last):
+2026-06-01T20:21:14.000Z ERROR payments-svc   File ""/app/services/user.py"", line 27, in display_name
+2026-06-01T20:21:19.000Z ERROR payments-svc     return user.profile.name.strip()
+2026-06-01T20:21:20.000Z ERROR payments-svc AttributeError: 'NoneType' object has no attribute 'strip'
+2026-06-01T20:21:25.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 85% of users
+2026-06-01T20:21:27.000Z DEBUG payments-svc cache hit ratio 85%",application_exception,P2,prod
+inc-1024,"2026-09-16T11:02:02.000Z WARN  checkout-api 401 Unauthorized: JWT signature verification failed for sub=1825124d94 (kid=prod-2024)
+2026-09-16T11:02:06.000Z INFO  checkout-api connection to sso.internal established
+2026-09-16T11:02:12.000Z WARN  checkout-api jwt.exceptions.InvalidSignatureError: Signature verification failed
+2026-09-16T11:02:19.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",authentication_failure,P3,staging
+inc-0236,"2026-02-09T11:41:02.000Z WARN  payments-svc HTTP 429 Too Many Requests from https://cdn.shopnest.in/v1/charges (retry-after: 30s)
+2026-02-09T11:41:07.000Z INFO  payments-svc POST /api/v1/orders 201 29149ms
+2026-02-09T11:41:08.000Z WARN  payments-svc provider rate limit hit: 80 requests in 60s (limit 200)
+2026-02-09T11:41:15.000Z INFO  payments-svc POST /api/v1/orders 201 29149ms
+2026-02-09T11:41:16.000Z INFO  oncall [prod] intermittent; 80 occurrences today, retries succeed, no SLA impact",rate_limit_exceeded,P3,prod
+inc-0017,"2026-06-12T16:30:06.000Z ERROR auth-gateway socket.gaierror: [Errno -3] Temporary failure in name resolution (host=redis.internal)
+2026-06-12T16:30:07.000Z ERROR auth-gateway requests.exceptions.ConnectionError: HTTPSConnectionPool(host='redis.internal', port=443): Max retries exceeded
+2026-06-12T16:30:12.000Z INFO  auth-gateway GET /api/v1/items 200 6433ms
+2026-06-12T16:30:21.000Z WARN  oncall [prod] degraded: auth-gateway succeeding after retries, p95 latency elevated for 95% of users",dns_resolution_failure,P2,prod
+inc-0801,"2026-03-16T19:27:01.000Z WARN  kubelet Pod prod/payments-svc-66fc04ca7a container payments-svc terminated: reason=OOMKilled exitCode=137
+2026-03-16T19:27:07.000Z INFO  payments-svc scheduled job 'cleanup' finished in 20148ms
+2026-03-16T19:27:08.000Z INFO  kubelet Container payments-svc restarted (restart count 657); memory limit 256Mi
+2026-03-16T19:27:15.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 94% of users",out_of_memory,P2,prod
+inc-0302,"2026-03-25T22:10:08.000Z ERROR recommendation-svc OSError: [Errno 28] No space left on device: '/var/log/recommendation-svc/app.log'
+2026-03-25T22:10:14.000Z INFO  recommendation-svc scheduled job 'cleanup' finished in 14149ms
+2026-03-25T22:10:19.000Z CRIT  recommendation-svc disk usage on /var is 100% (63G used, 0G free)
+2026-03-25T22:10:25.000Z INFO  monitor [dev] non-production environment dev; QA test run affected only",disk_space_full,P3,dev
+inc-0387,"2026-05-01T03:58:07.000Z WARN  coredns [ERROR] plugin/errors: 2 cdn.shopnest.in. A: read udp 10.0.227.116:30756->10.0.0.2:53: i/o timeout
+2026-05-01T03:58:16.000Z ERROR billing-cron dial tcp: lookup cdn.shopnest.in on 10.0.0.10:53: server misbehaving
+2026-05-01T03:58:19.000Z INFO  oncall [prod] intermittent; 619 occurrences today, retries succeed, no SLA impact
+2026-05-01T03:58:20.000Z INFO  billing-cron GET /api/v1/items 200 2127ms",dns_resolution_failure,P3,prod
+inc-0502,"2026-10-16T18:56:03.000Z WARN  kubelet Back-off restarting failed container auth-gateway in pod auth-gateway-459c012c23_staging
+2026-10-16T18:56:10.000Z INFO  kubectl pod auth-gateway-459c012c23 status CrashLoopBackOff restarts=211 age=39m
+2026-10-16T18:56:13.000Z INFO  auth-gateway GET /api/v1/items 200 17286ms
+2026-10-16T18:56:14.000Z INFO  monitor [staging] auth-gateway: 211 errors in the last hour on 1 host; no customer impact reported",kubernetes_crashloop,P3,staging
+inc-1111,"2026-10-10T12:16:05.000Z ERROR postgres[890]: PANIC:  could not write to file ""pg_wal/xlogtemp.890"": No space left on device
+2026-10-10T12:16:09.000Z ERROR postgres[890]: LOG:  database system is shut down
+2026-10-10T12:16:12.000Z DEBUG monitor [dev] seen once during local test run by developer; informational
+2026-10-10T12:16:14.000Z INFO  catalog-api connection to api.shopnest.in established",disk_space_full,P4,dev
+inc-0612,"2026-10-04T22:33:02.000Z [error] 21819#0: *4 connect() failed (111: Connection refused) while connecting to upstream, client: 52.20.148.154, server: sso.internal, request: ""GET /api/v1/cart HTTP/1.1"", upstream: ""http://10.0.138.168:8080/api/v1/cart""
+2026-10-04T22:33:05.000Z 52.20.148.154 - - ""GET /api/v1/cart HTTP/1.1"" 502 157 ""-"" ""Mozilla/5.0""
+2026-10-04T22:33:08.000Z WARN  oncall [staging] degraded: auth-gateway succeeding after retries, p95 latency elevated for 94% of users",upstream_gateway_error,P2,staging
+inc-0681,"2026-03-05T07:03:05.000Z [error] 37823#0: *45 SSL_do_handshake() failed (SSL: error:0A000415:SSL routines::sslv3 alert certificate expired) while SSL handshaking to upstream, upstream: ""https://search.internal:443/""
+2026-03-05T07:03:11.000Z INFO  monitor [staging] one-off event in staging, already resolved by auto-restart; logged for record
+2026-03-05T07:03:14.000Z INFO  billing-cron connection to search.internal established",tls_certificate_expired,P4,staging
+inc-0568,"2026-02-10T07:32:04.000Z ALERT prometheus p99 latency for auth-gateway = 5742ms (threshold 800ms) for 28m
+2026-02-10T07:32:06.000Z INFO  auth-gateway scheduled job 'cleanup' finished in 10431ms
+2026-02-10T07:32:12.000Z WARN  auth-gateway request GET /api/v1/search took 5742ms (slow)
+2026-02-10T07:32:18.000Z INFO  auth-gateway connection to sso.internal established
+2026-02-10T07:32:20.000Z INFO  monitor [staging] auth-gateway: 324 errors in the last hour on 1 host; no customer impact reported",high_latency_timeout,P3,staging
+inc-0066,"2026-09-24T06:03:05.000Z WARN  search-api HikariPool-1 - Connection is not available, request timed out after 29815ms.
+2026-09-24T06:03:10.000Z ERROR search-api java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available
+2026-09-24T06:03:16.000Z WARN  search-api HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=29815ms).
+2026-09-24T06:03:24.000Z WARN  monitor [prod] background jobs for search-api delayed by 24 min; customer-facing API healthy",database_connection_exhausted,P2,prod
+inc-0096,"2026-08-13T04:53:05.000Z WARN  kubelet Readiness probe failed: HTTP probe failed with statuscode: 503
+2026-08-13T04:53:08.000Z WARN  kubelet Back-off restarting failed container billing-cron in pod billing-cron-90ef8f8421_platform; restart count 530
+2026-08-13T04:53:13.000Z ALERT statuspage [prod] incident opened: billing-cron down, 100% of requests failing since 2026-08-13T04:53:13.000Z",kubernetes_crashloop,P1,prod
+inc-0184,"ERROR user-service write /data/uploads/f45938949e.tmp: ENOSPC: no space left on device
+WARN  node_exporter filesystem /data inodes_free=0 avail_bytes=0
+INFO  user-service GET /api/v1/items 200 2299ms
+ALERT monitor [prod] user-service: error rate 16% on 1 of 8 hosts; some users affected
+INFO  kubelet Successfully pulled image for user-service",disk_space_full,P2,prod
+inc-0822,"2026-06-03T12:16:04.000Z ERROR recommendation-svc Unhandled exception in request POST /api/v1/payments: TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'
+2026-06-03T12:16:05.000Z ERROR recommendation-svc   File ""/app/api/payments.py"", line 25, in apply_discount
+2026-06-03T12:16:09.000Z INFO  kubelet Successfully pulled image for recommendation-svc
+2026-06-03T12:16:16.000Z ALERT statuspage [prod] incident opened: recommendation-svc down, 100% of requests failing since 2026-06-03T12:16:09.000Z",application_exception,P1,prod
+inc-1141,"2026-01-13T03:27:07.000Z ERROR inventory-api curl: (6) Could not resolve host: sso.internal
+2026-01-13T03:27:09.000Z INFO  inventory-api POST /api/v1/orders 201 3301ms
+2026-01-13T03:27:11.000Z WARN  resolver NXDOMAIN for sso.internal (ttl 0)
+2026-01-13T03:27:17.000Z WARN  oncall [prod] degraded: inventory-api succeeding after retries, p95 latency elevated for 85% of users",dns_resolution_failure,P2,prod
+inc-0390,"2026-03-03T01:55:09.000Z ERROR notification-svc Traceback (most recent call last):
+2026-03-03T01:55:11.000Z ERROR notification-svc   File ""/app/services/user.py"", line 9, in display_name
+2026-03-03T01:55:19.000Z ERROR notification-svc     return user.profile.name.strip()
+2026-03-03T01:55:23.000Z ERROR notification-svc AttributeError: 'NoneType' object has no attribute 'strip'
+2026-03-03T01:55:24.000Z INFO  oncall [prod] intermittent; 175 occurrences today, retries succeed, no SLA impact
+2026-03-03T01:55:29.000Z INFO  kubelet Successfully pulled image for notification-svc
+2026-03-03T01:55:36.000Z DEBUG notification-svc cache hit ratio 91%",application_exception,P3,prod
+inc-0776,"ERROR search-api Traceback (most recent call last):
+ERROR search-api   File ""/app/api/orders.py"", line 11, in get_order
+ERROR search-api     total = order[""items""][0][""price""]
+ERROR search-api KeyError: 'price'
+INFO  oncall [prod] intermittent; 780 occurrences today, retries succeed, no SLA impact
+INFO  search-api POST /api/v1/orders 201 5680ms
+INFO  search-api scheduled job 'cleanup' finished in 5680ms",application_exception,P3,prod
+inc-0471,"2026-08-03T19:35:05.000Z WARN  recommendation-svc 401 Unauthorized: JWT signature verification failed for sub=ddead51a11 (kid=prod-2024)
+2026-08-03T19:35:06.000Z WARN  recommendation-svc jwt.exceptions.InvalidSignatureError: Signature verification failed
+2026-08-03T19:35:10.000Z WARN  oncall [prod] degraded: recommendation-svc succeeding after retries, p95 latency elevated for 85% of users
+2026-08-03T19:35:11.000Z INFO  recommendation-svc connection to api.shopnest.in established",authentication_failure,P2,prod
+inc-0589,"2026-06-01T23:56:04.000Z ERROR inventory-api socket.gaierror: [Errno -3] Temporary failure in name resolution (host=auth.shopnest.in)
+2026-06-01T23:56:08.000Z ERROR inventory-api requests.exceptions.ConnectionError: HTTPSConnectionPool(host='auth.shopnest.in', port=443): Max retries exceeded
+2026-06-01T23:56:16.000Z WARN  oncall [prod] degraded: inventory-api succeeding after retries, p95 latency elevated for 99% of users
+2026-06-01T23:56:24.000Z INFO  kubelet Successfully pulled image for inventory-api",dns_resolution_failure,P2,prod
+inc-0843,"2026-01-18T16:25:01.000Z WARN  user-service ThrottlingException: Rate exceeded (Service: AmazonSQS; Status Code: 400; Error Code: Throttling)
+2026-01-18T16:25:04.000Z WARN  user-service backing off 7s before retry (306 throttled calls in last minute)
+2026-01-18T16:25:11.000Z ALERT monitor [prod] 1 pods of user-service unhealthy, traffic shifted to remaining replicas, partial impact",rate_limit_exceeded,P2,prod
+inc-0512,"ERROR payments-svc requests.exceptions.SSLError: HTTPSConnectionPool(host='redis.internal', port=443): Max retries exceeded (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1006)')))
+ALERT pagerduty [prod] payments-svc: error rate 66% across all 3 hosts; checkout unavailable for all users",tls_certificate_expired,P1,prod
+inc-1194,"2026-10-19T19:14:06.000Z ERROR billing-cron Traceback (most recent call last):
+2026-10-19T19:14:14.000Z ERROR billing-cron   File ""/app/workers/gunicorn.py"", line 40, in build_batch
+2026-10-19T19:14:18.000Z ERROR billing-cron MemoryError: Unable to allocate 4 GiB for an array with shape (5427494, 512)
+2026-10-19T19:14:25.000Z WARN  monitor [prod] background jobs for billing-cron delayed by 40 min; customer-facing API healthy",out_of_memory,P2,prod
+inc-1156,"2026-08-28T19:32:07.000Z ERROR postgres[20229]: PANIC:  could not write to file ""pg_wal/xlogtemp.20229"": No space left on device
+2026-08-28T19:32:16.000Z DEBUG order-worker cache hit ratio 99%
+2026-08-28T19:32:25.000Z ERROR postgres[20229]: LOG:  database system is shut down
+2026-08-28T19:32:30.000Z INFO  monitor [staging] one-off event in staging, already resolved by auto-restart; logged for record",disk_space_full,P4,staging
+inc-0451,"2026-07-22T15:36:05.000Z ERROR recommendation-svc socket.gaierror: [Errno -3] Temporary failure in name resolution (host=cdn.shopnest.in)
+2026-07-22T15:36:12.000Z INFO  kubelet Successfully pulled image for recommendation-svc
+2026-07-22T15:36:17.000Z ERROR recommendation-svc requests.exceptions.ConnectionError: HTTPSConnectionPool(host='cdn.shopnest.in', port=443): Max retries exceeded
+2026-07-22T15:36:19.000Z INFO  monitor [dev] rate 0.44% within normal baseline; no action required by policy
+2026-07-22T15:36:28.000Z INFO  recommendation-svc POST /api/v1/orders 201 23327ms",dns_resolution_failure,P4,dev
+inc-0456,"2026-06-12T06:21:02.000Z ERROR inventory-api OSError: [Errno 28] No space left on device: '/var/log/inventory-api/app.log'
+2026-06-12T06:21:07.000Z DEBUG inventory-api cache hit ratio 95%
+2026-06-12T06:21:15.000Z CRIT  inventory-api disk usage on /var is 95% (13G used, 0G free)
+2026-06-12T06:21:20.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",disk_space_full,P3,staging
+inc-0167,"2026-09-25T10:42:04.000Z WARN  order-worker ThrottlingException: Rate exceeded (Service: AmazonSQS; Status Code: 400; Error Code: Throttling)
+2026-09-25T10:42:09.000Z WARN  order-worker backing off 25s before retry (564 throttled calls in last minute)
+2026-09-25T10:42:18.000Z INFO  order-worker scheduled job 'cleanup' finished in 29599ms
+2026-09-25T10:42:25.000Z INFO  monitor [dev] order-worker recovered automatically after 25 min; error rate back to 0.39%",rate_limit_exceeded,P3,dev
+inc-0828,"2026-04-13T07:04:05.000Z WARN  kubelet Pod core/auth-gateway-632d9563ed container auth-gateway terminated: reason=OOMKilled exitCode=137
+2026-04-13T07:04:08.000Z DEBUG auth-gateway cache hit ratio 86%
+2026-04-13T07:04:17.000Z INFO  kubelet Container auth-gateway restarted (restart count 278); memory limit 512Mi
+2026-04-13T07:04:26.000Z INFO  monitor [dev] non-production environment dev; QA test run affected only",out_of_memory,P3,dev
+inc-0109,"2026-10-01T10:18:04.000Z WARN  notification-svc 401 Unauthorized: token expired at 2026-04-02T00:00:00Z for client_id=mobile-app
+2026-10-01T10:18:10.000Z INFO  kubelet Successfully pulled image for notification-svc
+2026-10-01T10:18:16.000Z WARN  notification-svc jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-10-01T10:18:25.000Z INFO  notification-svc connection to payments.shopnest.in established
+2026-10-01T10:18:32.000Z WARN  oncall [prod] degraded: notification-svc succeeding after retries, p95 latency elevated for 100% of users",authentication_failure,P2,prod
+inc-0379,"2026-07-13T04:18:03.000Z [error] 47363#0: *42 connect() failed (111: Connection refused) while connecting to upstream, client: 171.99.171.169, server: cdn.shopnest.in, request: ""GET /api/v1/cart HTTP/1.1"", upstream: ""http://10.0.90.119:8080/api/v1/cart""
+2026-07-13T04:18:05.000Z INFO  kubelet Successfully pulled image for recommendation-svc
+2026-07-13T04:18:06.000Z 171.99.171.169 - - ""GET /api/v1/cart HTTP/1.1"" 502 157 ""-"" ""Mozilla/5.0""
+2026-07-13T04:18:07.000Z WARN  oncall [prod] degraded: recommendation-svc succeeding after retries, p95 latency elevated for 87% of users
+2026-07-13T04:18:09.000Z INFO  recommendation-svc connection to cdn.shopnest.in established",upstream_gateway_error,P2,prod
+inc-0382,"WARN  kubelet Readiness probe failed: HTTP probe failed with statuscode: 503
+WARN  kubelet Back-off restarting failed container payments-svc in pod payments-svc-f5299371cf_core; restart count 676
+INFO  monitor [dev] single occurrence on dev host db-primary-27; no users on this environment",kubernetes_crashloop,P4,dev
+inc-0798,"2026-01-07T02:38:08.000Z [error] 1664#0: *32 upstream prematurely closed connection while reading response header from upstream, client: 108.192.153.96, server: payments.shopnest.in, request: ""POST /api/v1/checkout HTTP/1.1""
+2026-01-07T02:38:11.000Z INFO  notification-svc POST /api/v1/orders 201 24616ms
+2026-01-07T02:38:12.000Z 108.192.153.96 - - ""POST /api/v1/checkout HTTP/1.1"" 502 0
+2026-01-07T02:38:14.000Z CRIT  monitor [prod] primary database unavailable; all write traffic failing on 8 nodes",upstream_gateway_error,P1,prod
+inc-0738,"2026-04-17T02:14:07.000Z WARN  coredns [ERROR] plugin/errors: 2 db.internal. A: read udp 10.0.39.7:63334->10.0.0.2:53: i/o timeout
+2026-04-17T02:14:16.000Z INFO  checkout-api GET /api/v1/items 200 18250ms
+2026-04-17T02:14:18.000Z ERROR checkout-api dial tcp: lookup db.internal on 10.0.0.10:53: server misbehaving
+2026-04-17T02:14:25.000Z INFO  monitor [prod] non-production environment prod; QA test run affected only
+2026-04-17T02:14:26.000Z DEBUG checkout-api cache hit ratio 88%",dns_resolution_failure,P3,prod
+inc-0785,"2026-08-19T07:20:08.000Z ERROR inventory-api pymysql.err.OperationalError: (1040, 'Too many connections')
+2026-08-19T07:20:15.000Z ERROR inventory-api db=payments_db active_connections=98/500 waiting=853
+2026-08-19T07:20:24.000Z INFO  oncall [dev] intermittent; 853 occurrences today, retries succeed, no SLA impact",database_connection_exhausted,P3,dev
+inc-0000,"2026-05-24T20:40:06.000Z ERROR migrate alembic.util.exc.CommandError: Can't locate revision identified by 'b9e37d9fd7'
+2026-05-24T20:40:11.000Z ERROR deploy-bot pre-deploy migration failed for notification-svc; deployment aborted
+2026-05-24T20:40:19.000Z INFO  notification-svc scheduled job 'cleanup' finished in 10931ms
+2026-05-24T20:40:27.000Z INFO  monitor [prod] notification-svc recovered automatically after 25 min; error rate back to 0.13%",deployment_failure,P3,prod
+inc-1146,"2026-01-15T04:20:09.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/report-worker:v12.128.230"": rpc error: code = NotFound desc = manifest unknown
+2026-01-15T04:20:11.000Z INFO  kubectl report-worker-6f847ed77d 0/1 ImagePullBackOff 0 12m
+2026-01-15T04:20:19.000Z ALERT statuspage [prod] incident opened: report-worker down, 100% of requests failing since 2026-01-15T04:20:19.000Z",deployment_failure,P1,prod
+inc-0625,"2026-07-02T04:52:04.000Z ERROR order-worker requests.exceptions.SSLError: HTTPSConnectionPool(host='db.internal', port=443): Max retries exceeded (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1006)')))
+2026-07-02T04:52:12.000Z INFO  order-worker POST /api/v1/orders 201 11247ms
+2026-07-02T04:52:20.000Z WARN  oncall [prod] degraded: order-worker succeeding after retries, p95 latency elevated for 100% of users
+2026-07-02T04:52:25.000Z INFO  order-worker connection to db.internal established",tls_certificate_expired,P2,prod
+inc-0746,"2026-06-24T11:47:04.000Z ERROR postgres[25269]: PANIC:  could not write to file ""pg_wal/xlogtemp.25269"": No space left on device
+2026-06-24T11:47:11.000Z ERROR postgres[25269]: LOG:  database system is shut down
+2026-06-24T11:47:20.000Z DEBUG billing-cron cache hit ratio 95%
+2026-06-24T11:47:22.000Z ALERT monitor [prod] 1 pods of billing-cron unhealthy, traffic shifted to remaining replicas, partial impact",disk_space_full,P2,prod
+inc-0518,"2026-07-20T07:30:03.000Z ERROR inventory-api Traceback (most recent call last):
+2026-07-20T07:30:10.000Z ERROR inventory-api   File ""/app/services/user.py"", line 9, in display_name
+2026-07-20T07:30:17.000Z ERROR inventory-api     return user.profile.name.strip()
+2026-07-20T07:30:24.000Z ERROR inventory-api AttributeError: 'NoneType' object has no attribute 'strip'
+2026-07-20T07:30:33.000Z WARN  monitor [prod] background jobs for inventory-api delayed by 9 min; customer-facing API healthy",application_exception,P2,prod
+inc-0146,"2026-08-02T03:31:04.000Z WARN  coredns [ERROR] plugin/errors: 2 redis.internal. A: read udp 10.0.213.147:10762->10.0.0.2:53: i/o timeout
+2026-08-02T03:31:11.000Z ERROR recommendation-svc dial tcp: lookup redis.internal on 10.0.0.10:53: server misbehaving
+2026-08-02T03:31:19.000Z INFO  recommendation-svc connection to redis.internal established
+2026-08-02T03:31:22.000Z ALERT monitor [prod] 3 pods of recommendation-svc unhealthy, traffic shifted to remaining replicas, partial impact",dns_resolution_failure,P2,prod
+inc-0303,"ERROR helm Error: UPGRADE FAILED: timed out waiting for the condition (release payments-svc, chart payments-svc-25.177.201)
+INFO  helm rollback payments-svc to revision 175 started
+DEBUG payments-svc cache hit ratio 95%
+ALERT monitor [prod] payments-svc: error rate 10% on 1 of 12 hosts; some users affected
+INFO  payments-svc connection to redis.internal established",deployment_failure,P2,prod
+inc-1150,"2026-09-21T07:30:09.000Z WARN  kubelet Liveness probe failed: Get ""http://10.0.93.99:8080/health"": dial tcp 10.0.93.99:8080: connect: connection refused
+2026-09-21T07:30:18.000Z DEBUG catalog-api cache hit ratio 90%
+2026-09-21T07:30:23.000Z INFO  kubelet Container catalog-api failed liveness probe, will be restarted
+2026-09-21T07:30:31.000Z INFO  kubectl catalog-api-0487b31442 0/1 CrashLoopBackOff 517 42m
+2026-09-21T07:30:34.000Z ALERT monitor [staging] catalog-api: error rate 24% on 2 of 4 hosts; some users affected
+2026-09-21T07:30:41.000Z INFO  catalog-api scheduled job 'cleanup' finished in 25468ms",kubernetes_crashloop,P2,staging
+inc-0603,"2026-08-06T09:25:09.000Z kernel: [14361.7] Out of memory: Killed process 14361 (report_builder) total-vm:4445306kB, anon-rss:4771411kB, file-rss:0kB
+2026-08-06T09:25:16.000Z INFO  payments-svc health check ok (uptime 7h)
+2026-08-06T09:25:19.000Z kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,task=report_builder,pid=14361
+2026-08-06T09:25:20.000Z systemd[1]: payments-svc.service: Main process exited, code=killed, status=9/KILL
+2026-08-06T09:25:29.000Z ALERT monitor [prod] 1 pods of payments-svc unhealthy, traffic shifted to remaining replicas, partial impact",out_of_memory,P2,prod
+inc-0961,"2026-02-26T23:53:05.000Z WARN  auth-gateway HTTP 429 Too Many Requests from https://search.internal/v1/charges (retry-after: 33s)
+2026-02-26T23:53:11.000Z WARN  auth-gateway provider rate limit hit: 159 requests in 60s (limit 500)
+2026-02-26T23:53:19.000Z ALERT monitor [prod] 2 pods of auth-gateway unhealthy, traffic shifted to remaining replicas, partial impact
+2026-02-26T23:53:27.000Z INFO  auth-gateway GET /api/v1/items 200 25773ms",rate_limit_exceeded,P2,prod
+inc-0469,"2026-09-02T23:11:01.000Z ALERT prometheus p99 latency for search-api = 6577ms (threshold 800ms) for 24m
+2026-09-02T23:11:08.000Z INFO  search-api connection to redis.internal established
+2026-09-02T23:11:16.000Z WARN  search-api request GET /api/v1/search took 6577ms (slow)
+2026-09-02T23:11:21.000Z INFO  search-api GET /api/v1/items 200 25309ms
+2026-09-02T23:11:25.000Z INFO  monitor [dev] single occurrence on dev host web-24; no users on this environment",high_latency_timeout,P4,dev
+inc-0732,"2026-02-08T03:18:06.000Z ERROR postgres[10002]: PANIC:  could not write to file ""pg_wal/xlogtemp.10002"": No space left on device
+2026-02-08T03:18:09.000Z INFO  notification-svc health check ok (uptime 32h)
+2026-02-08T03:18:17.000Z ERROR postgres[10002]: LOG:  database system is shut down
+2026-02-08T03:18:24.000Z INFO  notification-svc GET /api/v1/items 200 11002ms
+2026-02-08T03:18:26.000Z INFO  oncall [prod] intermittent; 641 occurrences today, retries succeed, no SLA impact",disk_space_full,P3,prod
+inc-0962,"2026-01-24T22:04:08.000Z ERROR payments-svc java.lang.OutOfMemoryError: Java heap space
+2026-01-24T22:04:16.000Z DEBUG payments-svc cache hit ratio 93%
+2026-01-24T22:04:17.000Z ERROR payments-svc 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+2026-01-24T22:04:19.000Z ERROR payments-svc 	at com.shopnest.report.Exporter.buildRows(Exporter.java:13)
+2026-01-24T22:04:23.000Z INFO  oncall [prod] intermittent; 111 occurrences today, retries succeed, no SLA impact",out_of_memory,P3,prod
+inc-0513,"ERROR migrate alembic.util.exc.CommandError: Can't locate revision identified by 'c172f90cfd'
+INFO  checkout-api GET /api/v1/items 200 27447ms
+ERROR deploy-bot pre-deploy migration failed for checkout-api; deployment aborted
+DEBUG checkout-api cache hit ratio 87%
+ALERT monitor [prod] 2 pods of checkout-api unhealthy, traffic shifted to remaining replicas, partial impact",deployment_failure,P2,prod
+inc-0411,"2026-07-03T01:57:05.000Z ERROR payments-svc x509: certificate has expired or is not yet valid: current time 2026-07-03T01:57:05.000Z is after 2026-07-05T00:00:00Z
+2026-07-03T01:57:10.000Z ERROR payments-svc Get ""https://sso.internal/v1/token"": x509: certificate has expired
+2026-07-03T01:57:12.000Z INFO  oncall [staging] intermittent; 40 occurrences today, retries succeed, no SLA impact
+2026-07-03T01:57:16.000Z INFO  payments-svc scheduled job 'cleanup' finished in 9847ms",tls_certificate_expired,P3,staging
+inc-0067,"2026-09-25T22:38:02.000Z ERROR order-worker x509: certificate has expired or is not yet valid: current time 2026-09-25T22:38:02.000Z is after 2026-04-05T00:00:00Z
+2026-09-25T22:38:07.000Z ERROR order-worker Get ""https://search.internal/v1/token"": x509: certificate has expired
+2026-09-25T22:38:15.000Z ALERT monitor [staging] 1 pods of order-worker unhealthy, traffic shifted to remaining replicas, partial impact
+2026-09-25T22:38:18.000Z INFO  order-worker GET /api/v1/items 200 28933ms",tls_certificate_expired,P2,staging
+inc-1115,"2026-09-21T14:54:07.000Z LOG   postgres[37774]: duration: 2520.8 ms  statement: SELECT * FROM orders o JOIN order_items i ON i.order_id = o.id WHERE o.user_id = $1
+2026-09-21T14:54:08.000Z WARN  notification-svc slow query detected (2520ms) on db=payments_db; lock_wait=21826ms
+2026-09-21T14:54:17.000Z INFO  monitor [staging] rate 0.02% within normal baseline; no action required by policy",high_latency_timeout,P4,staging
+inc-0807,"2026-08-10T16:50:06.000Z ALERT prometheus p99 latency for inventory-api = 7272ms (threshold 800ms) for 37m
+2026-08-10T16:50:13.000Z WARN  inventory-api request GET /api/v1/search took 7272ms (slow)
+2026-08-10T16:50:19.000Z WARN  monitor [prod] background jobs for inventory-api delayed by 37 min; customer-facing API healthy
+2026-08-10T16:50:20.000Z INFO  kubelet Successfully pulled image for inventory-api",high_latency_timeout,P2,prod
+inc-0814,"2026-06-13T14:38:05.000Z [error] 39354#0: *2 no live upstreams while connecting to upstream, client: 168.208.80.62, server: auth.shopnest.in, request: ""GET / HTTP/1.1"", upstream: ""http://order-worker/""
+2026-06-13T14:38:13.000Z ALERT ingress 5xx_rate=96% on auth.shopnest.in (502 Bad Gateway)
+2026-06-13T14:38:20.000Z INFO  order-worker scheduled job 'cleanup' finished in 25362ms
+2026-06-13T14:38:22.000Z INFO  monitor [staging] one-off event in staging, already resolved by auto-restart; logged for record",upstream_gateway_error,P4,staging
+inc-0485,"ERROR postgres[18473]: PANIC:  could not write to file ""pg_wal/xlogtemp.18473"": No space left on device
+ERROR postgres[18473]: LOG:  database system is shut down
+ALERT pagerduty [prod] payments-svc: error rate 96% across all 12 hosts; checkout unavailable for all users",disk_space_full,P1,prod
+inc-0930,"2026-10-07T14:40:05.000Z ALERT prometheus p99 latency for auth-gateway = 5038ms (threshold 800ms) for 36m
+2026-10-07T14:40:13.000Z WARN  auth-gateway request GET /api/v1/search took 5038ms (slow)
+2026-10-07T14:40:21.000Z INFO  kubelet Successfully pulled image for auth-gateway
+2026-10-07T14:40:30.000Z INFO  monitor [staging] auth-gateway: 686 errors in the last hour on 1 host; no customer impact reported",high_latency_timeout,P3,staging
+inc-0528,"2026-10-24T21:29:06.000Z ERROR search-api openai.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model on tokens per minute. Limit 500, used 556', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+2026-10-24T21:29:10.000Z ALERT monitor [prod] 1 pods of search-api unhealthy, traffic shifted to remaining replicas, partial impact
+2026-10-24T21:29:18.000Z DEBUG search-api cache hit ratio 100%",rate_limit_exceeded,P2,prod
+inc-0849,"2026-06-26T20:25:09.000Z ERROR order-worker java.lang.OutOfMemoryError: Java heap space
+2026-06-26T20:25:15.000Z ERROR order-worker 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+2026-06-26T20:25:17.000Z ERROR order-worker 	at com.shopnest.report.Exporter.buildRows(Exporter.java:42)
+2026-06-26T20:25:19.000Z INFO  kubelet Successfully pulled image for order-worker
+2026-06-26T20:25:20.000Z INFO  order-worker scheduled job 'cleanup' finished in 17084ms
+2026-06-26T20:25:24.000Z ALERT pagerduty [prod] order-worker: error rate 75% across all 3 hosts; checkout unavailable for all users",out_of_memory,P1,prod
+inc-0126,"2026-04-23T18:39:09.000Z [error] 49264#0: *41 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 15.160.48.99, server: sso.internal, request: ""GET /api/v1/search?q=shoes HTTP/1.1""
+2026-04-23T18:39:12.000Z 15.160.48.99 - - ""GET /api/v1/search?q=shoes HTTP/1.1"" 504 0
+2026-04-23T18:39:18.000Z INFO  order-worker connection to sso.internal established
+2026-04-23T18:39:27.000Z INFO  kubelet Successfully pulled image for order-worker
+2026-04-23T18:39:31.000Z INFO  monitor [dev] order-worker recovered automatically after 41 min; error rate back to 0.43%",upstream_gateway_error,P3,dev
+inc-1171,"2026-08-16T08:37:07.000Z ERROR inventory-api Traceback (most recent call last):
+2026-08-16T08:37:13.000Z INFO  inventory-api GET /api/v1/items 200 13957ms
+2026-08-16T08:37:21.000Z INFO  inventory-api scheduled job 'cleanup' finished in 13957ms
+2026-08-16T08:37:26.000Z ERROR inventory-api   File ""/app/workers/uvicorn.py"", line 45, in build_batch
+2026-08-16T08:37:34.000Z ERROR inventory-api MemoryError: Unable to allocate 20 GiB for an array with shape (5728780, 512)
+2026-08-16T08:37:36.000Z INFO  monitor [dev] rate 0.05% within normal baseline; no action required by policy",out_of_memory,P4,dev
+inc-0205,"ERROR postgres[53551]: PANIC:  could not write to file ""pg_wal/xlogtemp.53551"": No space left on device
+ERROR postgres[53551]: LOG:  database system is shut down
+WARN  monitor [prod] background jobs for notification-svc delayed by 10 min; customer-facing API healthy",disk_space_full,P2,prod
+inc-0232,"ERROR inventory-api grpc: rpc error: code = DeadlineExceeded desc = context deadline exceeded (timeout 10s) calling inventory.Reserve
+INFO  inventory-api scheduled job 'cleanup' finished in 26457ms
+INFO  inventory-api GET /api/v1/items 200 26457ms
+WARN  inventory-api 159 requests exceeded deadline in the last minute
+INFO  monitor [staging] rate 0.72% within normal baseline; no action required by policy",high_latency_timeout,P4,staging
+inc-0087,"2026-04-05T16:26:06.000Z ERROR order-worker java.lang.OutOfMemoryError: Java heap space
+2026-04-05T16:26:12.000Z ERROR order-worker 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+2026-04-05T16:26:13.000Z ERROR order-worker 	at com.shopnest.report.Exporter.buildRows(Exporter.java:27)
+2026-04-05T16:26:22.000Z INFO  monitor [dev] rate 0.88% within normal baseline; no action required by policy
+2026-04-05T16:26:26.000Z DEBUG order-worker cache hit ratio 89%",out_of_memory,P4,dev
+inc-1040,"WARN  kubelet Node ip-10-0-234-160 condition DiskPressure=True (ephemeral-storage 93% used)
+WARN  kubelet Evicting pod dev/payments-svc-0219cea0c3: The node was low on resource: ephemeral-storage.
+ALERT monitor [prod] 3 pods of payments-svc unhealthy, traffic shifted to remaining replicas, partial impact
+INFO  payments-svc connection to payments.shopnest.in established
+INFO  payments-svc health check ok (uptime 41h)",disk_space_full,P2,prod
+inc-0262,"ERROR order-worker httpx.ReadTimeout: timed out after 5s waiting for https://payments.shopnest.in/v1/quote
+WARN  order-worker upstream response time p95=6523ms p99=7114ms (baseline 120ms)
+WARN  oncall [prod] degraded: order-worker succeeding after retries, p95 latency elevated for 93% of users
+DEBUG order-worker cache hit ratio 93%",high_latency_timeout,P2,prod
+inc-0607,"2026-10-09T21:40:05.000Z ERROR user-service grpc: rpc error: code = DeadlineExceeded desc = context deadline exceeded (timeout 5s) calling inventory.Reserve
+2026-10-09T21:40:10.000Z WARN  user-service 110 requests exceeded deadline in the last minute
+2026-10-09T21:40:16.000Z ALERT pagerduty [prod] user-service: error rate 61% across all 8 hosts; checkout unavailable for all users",high_latency_timeout,P1,prod
+inc-1026,"2026-02-04T16:06:03.000Z ERROR report-worker Traceback (most recent call last):
+2026-02-04T16:06:04.000Z ERROR report-worker   File ""/app/services/user.py"", line 18, in display_name
+2026-02-04T16:06:06.000Z ERROR report-worker     return user.profile.name.strip()
+2026-02-04T16:06:11.000Z INFO  report-worker scheduled job 'cleanup' finished in 11109ms
+2026-02-04T16:06:15.000Z ERROR report-worker AttributeError: 'NoneType' object has no attribute 'strip'
+2026-02-04T16:06:16.000Z DEBUG monitor [dev] seen once during local test run by developer; informational",application_exception,P4,dev
+inc-1005,"2026-10-10T02:03:04.000Z WARN  coredns [ERROR] plugin/errors: 2 auth.shopnest.in. A: read udp 10.0.86.153:8244->10.0.0.2:53: i/o timeout
+2026-10-10T02:03:10.000Z ERROR payments-svc dial tcp: lookup auth.shopnest.in on 10.0.0.10:53: server misbehaving
+2026-10-10T02:03:16.000Z INFO  oncall [prod] intermittent; 270 occurrences today, retries succeed, no SLA impact
+2026-10-10T02:03:25.000Z DEBUG payments-svc cache hit ratio 91%",dns_resolution_failure,P3,prod
+inc-0766,"2026-02-19T04:06:06.000Z ERROR report-worker OSError: [Errno 28] No space left on device: '/var/log/report-worker/app.log'
+2026-02-19T04:06:08.000Z CRIT  report-worker disk usage on /var is 92% (15G used, 0G free)
+2026-02-19T04:06:11.000Z INFO  report-worker POST /api/v1/orders 201 12578ms
+2026-02-19T04:06:19.000Z INFO  report-worker scheduled job 'cleanup' finished in 12578ms
+2026-02-19T04:06:28.000Z INFO  monitor [staging] single occurrence on dev host worker-43; no users on this environment",disk_space_full,P4,staging
+inc-1047,"2026-10-03T17:57:05.000Z ERROR report-worker Traceback (most recent call last):
+2026-10-03T17:57:12.000Z ERROR report-worker   File ""/app/api/orders.py"", line 20, in get_order
+2026-10-03T17:57:14.000Z ERROR report-worker     total = order[""items""][0][""price""]
+2026-10-03T17:57:18.000Z INFO  report-worker scheduled job 'cleanup' finished in 23084ms
+2026-10-03T17:57:20.000Z ERROR report-worker KeyError: 'price'
+2026-10-03T17:57:24.000Z DEBUG monitor [staging] seen once during local test run by developer; informational",application_exception,P4,staging
+inc-0136,"2026-07-23T19:05:08.000Z ERROR checkout-api java.lang.NullPointerException: Cannot invoke ""com.shopnest.Cart.getItems()"" because ""cart"" is null
+2026-07-23T19:05:10.000Z ERROR checkout-api 	at com.shopnest.checkout.CheckoutService.total(CheckoutService.java:48)
+2026-07-23T19:05:11.000Z INFO  monitor [dev] single occurrence on dev host worker-48; no users on this environment
+2026-07-23T19:05:14.000Z INFO  checkout-api GET /api/v1/items 200 4663ms",application_exception,P4,dev
+inc-0678,"2026-08-11T10:55:08.000Z WARN  kubelet Readiness probe failed: HTTP probe failed with statuscode: 503
+2026-08-11T10:55:12.000Z WARN  kubelet Back-off restarting failed container payments-svc in pod payments-svc-6f52d7f029_dev; restart count 32
+2026-08-11T10:55:14.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 89% of users
+2026-08-11T10:55:15.000Z INFO  kubelet Successfully pulled image for payments-svc
+2026-08-11T10:55:20.000Z DEBUG payments-svc cache hit ratio 89%",kubernetes_crashloop,P2,prod
+inc-0043,"2026-06-22T05:44:06.000Z [error] 61081#0: *3 no live upstreams while connecting to upstream, client: 86.205.214.207, server: redis.internal, request: ""GET / HTTP/1.1"", upstream: ""http://auth-gateway/""
+2026-06-22T05:44:10.000Z INFO  auth-gateway POST /api/v1/orders 201 27788ms
+2026-06-22T05:44:17.000Z ALERT ingress 5xx_rate=88% on redis.internal (502 Bad Gateway)
+2026-06-22T05:44:26.000Z INFO  auth-gateway POST /api/v1/orders 201 27788ms
+2026-06-22T05:44:30.000Z INFO  oncall [staging] intermittent; 474 occurrences today, retries succeed, no SLA impact",upstream_gateway_error,P3,staging
+inc-0463,"2026-08-26T00:26:09.000Z ERROR payments-svc OSError: [Errno 28] No space left on device: '/var/log/payments-svc/app.log'
+2026-08-26T00:26:10.000Z INFO  payments-svc GET /api/v1/items 200 26524ms
+2026-08-26T00:26:14.000Z CRIT  payments-svc disk usage on /var is 100% (9G used, 0G free)
+2026-08-26T00:26:15.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 100% of users",disk_space_full,P2,prod
+inc-1136,"2026-10-20T06:13:08.000Z WARN  user-service 401 Unauthorized: token expired at 2026-02-05T00:00:00Z for client_id=mobile-app
+2026-10-20T06:13:12.000Z WARN  user-service jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-10-20T06:13:14.000Z ALERT monitor [prod] 1 pods of user-service unhealthy, traffic shifted to remaining replicas, partial impact
+2026-10-20T06:13:23.000Z INFO  user-service scheduled job 'cleanup' finished in 20075ms",authentication_failure,P2,prod
+inc-0178,"WARN  order-worker HikariPool-1 - Connection is not available, request timed out after 2914ms.
+INFO  order-worker health check ok (uptime 21h)
+ERROR order-worker java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available
+WARN  order-worker HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2914ms).
+INFO  order-worker POST /api/v1/orders 201 2914ms
+INFO  monitor [dev] rate 0.8% within normal baseline; no action required by policy",database_connection_exhausted,P4,dev
+inc-0971,"2026-01-20T20:42:07.000Z WARN  billing-cron HikariPool-1 - Connection is not available, request timed out after 9424ms.
+2026-01-20T20:42:15.000Z ERROR billing-cron java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available
+2026-01-20T20:42:19.000Z WARN  billing-cron HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9424ms).
+2026-01-20T20:42:24.000Z WARN  oncall [staging] degraded: billing-cron succeeding after retries, p95 latency elevated for 91% of users",database_connection_exhausted,P2,staging
+inc-0717,"2026-03-07T10:09:08.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/billing-cron:v35.37.86"": rpc error: code = NotFound desc = manifest unknown
+2026-03-07T10:09:09.000Z INFO  billing-cron GET /api/v1/items 200 7867ms
+2026-03-07T10:09:17.000Z INFO  kubectl billing-cron-71c6fe18c9 0/1 ImagePullBackOff 0 35m
+2026-03-07T10:09:21.000Z INFO  oncall [prod] intermittent; 491 occurrences today, retries succeed, no SLA impact
+2026-03-07T10:09:23.000Z DEBUG billing-cron cache hit ratio 90%",deployment_failure,P3,prod
+inc-0991,"2026-01-11T05:59:06.000Z ERROR user-service Unhandled exception in request POST /api/v1/payments: TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'
+2026-01-11T05:59:12.000Z DEBUG user-service cache hit ratio 95%
+2026-01-11T05:59:15.000Z ERROR user-service   File ""/app/api/payments.py"", line 40, in apply_discount
+2026-01-11T05:59:20.000Z WARN  monitor [staging] background jobs for user-service delayed by 40 min; customer-facing API healthy
+2026-01-11T05:59:28.000Z INFO  user-service GET /api/v1/items 200 24205ms",application_exception,P2,staging
+inc-0867,"2026-07-16T12:47:08.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/checkout-api:v35.174.44"": rpc error: code = NotFound desc = manifest unknown
+2026-07-16T12:47:09.000Z INFO  kubectl checkout-api-b21eac78b5 0/1 ImagePullBackOff 0 35m
+2026-07-16T12:47:13.000Z INFO  monitor [dev] rate 0.08% within normal baseline; no action required by policy",deployment_failure,P4,dev
+inc-1006,"2026-04-01T04:22:06.000Z ERROR recommendation-svc java.lang.NullPointerException: Cannot invoke ""com.shopnest.Cart.getItems()"" because ""cart"" is null
+2026-04-01T04:22:15.000Z ERROR recommendation-svc 	at com.shopnest.checkout.CheckoutService.total(CheckoutService.java:33)
+2026-04-01T04:22:22.000Z INFO  kubelet Successfully pulled image for recommendation-svc
+2026-04-01T04:22:25.000Z INFO  recommendation-svc connection to cdn.shopnest.in established
+2026-04-01T04:22:29.000Z INFO  monitor [staging] recommendation-svc: 502 errors in the last hour on 1 host; no customer impact reported",application_exception,P3,staging
+inc-1198,"2026-06-01T14:20:06.000Z 52.149.211.238 - - ""POST /api/v1/login HTTP/1.1"" 429 85 ""-"" ""python-requests/2.31""
+2026-06-01T14:20:12.000Z DEBUG notification-svc cache hit ratio 92%
+2026-06-01T14:20:14.000Z WARN  api-gateway rate limit exceeded for client 52.149.211.238: 626 req/min > 1000 req/min, throttling
+2026-06-01T14:20:17.000Z ALERT pagerduty [prod] notification-svc: error rate 61% across all 3 hosts; checkout unavailable for all users
+2026-06-01T14:20:25.000Z INFO  notification-svc POST /api/v1/orders 201 25643ms",rate_limit_exceeded,P1,prod
+inc-0950,"ERROR order-worker openai.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model on tokens per minute. Limit 60, used 309', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+INFO  order-worker GET /api/v1/items 200 8696ms
+WARN  monitor [prod] background jobs for order-worker delayed by 11 min; customer-facing API healthy",rate_limit_exceeded,P2,prod
+inc-1151,"2026-08-25T05:19:06.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/search-api:v34.59.1"": rpc error: code = NotFound desc = manifest unknown
+2026-08-25T05:19:09.000Z INFO  kubectl search-api-5d2ac19445 0/1 ImagePullBackOff 0 34m
+2026-08-25T05:19:11.000Z WARN  oncall [staging] degraded: search-api succeeding after retries, p95 latency elevated for 93% of users",deployment_failure,P2,staging
+inc-0851,"2026-06-23T22:25:05.000Z ERROR billing-cron openai.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model on tokens per minute. Limit 1000, used 311', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+2026-06-23T22:25:14.000Z INFO  monitor [staging] billing-cron: 311 errors in the last hour on 1 host; no customer impact reported
+2026-06-23T22:25:16.000Z INFO  billing-cron GET /api/v1/items 200 27189ms",rate_limit_exceeded,P3,staging
+inc-0185,"2026-10-13T00:49:06.000Z WARN  user-service 401 Unauthorized: JWT signature verification failed for sub=3e4f721793 (kid=prod-2024)
+2026-10-13T00:49:10.000Z WARN  user-service jwt.exceptions.InvalidSignatureError: Signature verification failed
+2026-10-13T00:49:14.000Z INFO  oncall [prod] intermittent; 480 occurrences today, retries succeed, no SLA impact",authentication_failure,P3,prod
+inc-0534,"2026-01-28T10:51:04.000Z [error] 8618#0: *11 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 195.128.149.166, server: cdn.shopnest.in, request: ""GET /api/v1/search?q=shoes HTTP/1.1""
+2026-01-28T10:51:13.000Z INFO  checkout-api POST /api/v1/orders 201 11096ms
+2026-01-28T10:51:14.000Z 195.128.149.166 - - ""GET /api/v1/search?q=shoes HTTP/1.1"" 504 0
+2026-01-28T10:51:16.000Z DEBUG checkout-api cache hit ratio 99%
+2026-01-28T10:51:24.000Z DEBUG monitor [dev] seen once during local test run by developer; informational",upstream_gateway_error,P4,dev
+inc-0074,"2026-10-09T10:58:05.000Z ERROR report-worker pymysql.err.OperationalError: (1040, 'Too many connections')
+2026-10-09T10:58:12.000Z ERROR report-worker db=catalog_db active_connections=99/60 waiting=802
+2026-10-09T10:58:20.000Z INFO  oncall [prod] intermittent; 802 occurrences today, retries succeed, no SLA impact",database_connection_exhausted,P3,prod
+inc-0673,"2026-05-19T09:12:07.000Z 128.245.209.222 - - ""POST /api/v1/login HTTP/1.1"" 429 85 ""-"" ""python-requests/2.31""
+2026-05-19T09:12:08.000Z WARN  api-gateway rate limit exceeded for client 128.245.209.222: 797 req/min > 100 req/min, throttling
+2026-05-19T09:12:13.000Z INFO  monitor [staging] single occurrence on dev host db-primary-20; no users on this environment",rate_limit_exceeded,P4,staging
+inc-0750,"2026-09-27T20:00:02.000Z ERROR payments-svc sqlalchemy.exc.TimeoutError: QueuePool limit of size 10 overflow 10 reached, connection timed out, timeout 5
+2026-09-27T20:00:06.000Z ERROR payments-svc could not obtain connection from pool after 26120ms (db=catalog_db)
+2026-09-27T20:00:13.000Z INFO  monitor [prod] non-production environment prod; QA test run affected only",database_connection_exhausted,P3,prod
+inc-0805,"2026-06-14T01:36:02.000Z ERROR order-worker sqlalchemy.exc.TimeoutError: QueuePool limit of size 10 overflow 20 reached, connection timed out, timeout 10
+2026-06-14T01:36:03.000Z ERROR order-worker could not obtain connection from pool after 18700ms (db=orders_db)
+2026-06-14T01:36:10.000Z INFO  monitor [prod] order-worker: 265 errors in the last hour on 1 host; no customer impact reported
+2026-06-14T01:36:12.000Z INFO  order-worker GET /api/v1/items 200 18700ms",database_connection_exhausted,P3,prod
+inc-0001,"2026-07-07T07:17:04.000Z ERROR checkout-api openai.RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model on tokens per minute. Limit 200, used 820', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}
+2026-07-07T07:17:09.000Z INFO  checkout-api health check ok (uptime 7h)
+2026-07-07T07:17:11.000Z ALERT monitor [prod] 3 pods of checkout-api unhealthy, traffic shifted to remaining replicas, partial impact",rate_limit_exceeded,P2,prod
+inc-0655,"2026-07-08T11:20:09.000Z [error] 28059#0: *3 SSL_do_handshake() failed (SSL: error:0A000415:SSL routines::sslv3 alert certificate expired) while SSL handshaking to upstream, upstream: ""https://sso.internal:443/""
+2026-07-08T11:20:17.000Z INFO  report-worker health check ok (uptime 3h)
+2026-07-08T11:20:22.000Z DEBUG report-worker cache hit ratio 86%
+2026-07-08T11:20:28.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",tls_certificate_expired,P3,staging
+inc-0591,"ERROR auth-gateway java.lang.OutOfMemoryError: Java heap space
+ERROR auth-gateway 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+ERROR auth-gateway 	at com.shopnest.report.Exporter.buildRows(Exporter.java:15)
+INFO  monitor [dev] auth-gateway: 134 errors in the last hour on 1 host; no customer impact reported
+INFO  auth-gateway health check ok (uptime 15h)",out_of_memory,P3,dev
+inc-0792,"2026-10-11T15:57:05.000Z ERROR billing-cron java.lang.OutOfMemoryError: Java heap space
+2026-10-11T15:57:08.000Z ERROR billing-cron 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+2026-10-11T15:57:17.000Z ERROR billing-cron 	at com.shopnest.report.Exporter.buildRows(Exporter.java:31)
+2026-10-11T15:57:21.000Z ALERT monitor [prod] 2 pods of billing-cron unhealthy, traffic shifted to remaining replicas, partial impact
+2026-10-11T15:57:27.000Z INFO  kubelet Successfully pulled image for billing-cron",out_of_memory,P2,prod
+inc-1079,"2026-03-14T08:58:03.000Z WARN  coredns [ERROR] plugin/errors: 2 sso.internal. A: read udp 10.0.183.55:1860->10.0.0.2:53: i/o timeout
+2026-03-14T08:58:07.000Z ERROR report-worker dial tcp: lookup sso.internal on 10.0.0.10:53: server misbehaving
+2026-03-14T08:58:13.000Z INFO  monitor [dev] report-worker recovered automatically after 15 min; error rate back to 0.79%
+2026-03-14T08:58:17.000Z INFO  report-worker GET /api/v1/items 200 3419ms",dns_resolution_failure,P3,dev
+inc-0570,"2026-07-02T12:56:09.000Z ERROR notification-svc pymysql.err.OperationalError: (1040, 'Too many connections')
+2026-07-02T12:56:15.000Z INFO  notification-svc scheduled job 'cleanup' finished in 26036ms
+2026-07-02T12:56:24.000Z ERROR notification-svc db=orders_db active_connections=98/100 waiting=891
+2026-07-02T12:56:33.000Z ALERT pagerduty [prod] notification-svc: error rate 77% across all 4 hosts; checkout unavailable for all users",database_connection_exhausted,P1,prod
+inc-1069,"2026-06-10T17:16:05.000Z WARN  kubelet Liveness probe failed: Get ""http://10.0.198.52:8080/health"": dial tcp 10.0.198.52:8080: connect: connection refused
+2026-06-10T17:16:13.000Z INFO  kubelet Container user-service failed liveness probe, will be restarted
+2026-06-10T17:16:14.000Z INFO  kubectl user-service-fb90c2ebf0 0/1 CrashLoopBackOff 558 33m
+2026-06-10T17:16:23.000Z WARN  oncall [prod] degraded: user-service succeeding after retries, p95 latency elevated for 88% of users",kubernetes_crashloop,P2,prod
+inc-0532,"2026-03-23T02:54:07.000Z ERROR auth-gateway x509: certificate has expired or is not yet valid: current time 2026-03-23T02:54:07.000Z is after 2026-03-23T00:00:00Z
+2026-03-23T02:54:08.000Z INFO  auth-gateway scheduled job 'cleanup' finished in 8636ms
+2026-03-23T02:54:11.000Z ERROR auth-gateway Get ""https://search.internal/v1/token"": x509: certificate has expired
+2026-03-23T02:54:12.000Z CRIT  monitor [prod] primary database unavailable; all write traffic failing on 4 nodes",tls_certificate_expired,P1,prod
+inc-0338,"2026-03-22T12:19:06.000Z ALERT prometheus p99 latency for recommendation-svc = 5201ms (threshold 800ms) for 31m
+2026-03-22T12:19:13.000Z INFO  recommendation-svc connection to payments.shopnest.in established
+2026-03-22T12:19:17.000Z DEBUG recommendation-svc cache hit ratio 94%
+2026-03-22T12:19:23.000Z WARN  recommendation-svc request GET /api/v1/search took 5201ms (slow)
+2026-03-22T12:19:25.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",high_latency_timeout,P3,staging
+inc-0680,"2026-02-13T13:15:01.000Z WARN  inventory-api ThrottlingException: Rate exceeded (Service: AmazonSQS; Status Code: 400; Error Code: Throttling)
+2026-02-13T13:15:02.000Z WARN  inventory-api backing off 7s before retry (632 throttled calls in last minute)
+2026-02-13T13:15:09.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",rate_limit_exceeded,P3,staging
+inc-0080,"2026-05-26T18:02:07.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/order-worker:v17.13.104"": rpc error: code = NotFound desc = manifest unknown
+2026-05-26T18:02:08.000Z INFO  order-worker health check ok (uptime 17h)
+2026-05-26T18:02:12.000Z INFO  kubectl order-worker-31fb14dc56 0/1 ImagePullBackOff 0 17m
+2026-05-26T18:02:21.000Z INFO  oncall [prod] intermittent; 770 occurrences today, retries succeed, no SLA impact",deployment_failure,P3,prod
+inc-1074,"2026-07-16T16:16:01.000Z ERROR migrate alembic.util.exc.CommandError: Can't locate revision identified by 'b2f4a62e78'
+2026-07-16T16:16:10.000Z INFO  billing-cron GET /api/v1/items 200 3096ms
+2026-07-16T16:16:19.000Z DEBUG billing-cron cache hit ratio 95%
+2026-07-16T16:16:20.000Z ERROR deploy-bot pre-deploy migration failed for billing-cron; deployment aborted
+2026-07-16T16:16:28.000Z INFO  monitor [staging] non-production environment staging; QA test run affected only",deployment_failure,P3,staging
+inc-0161,"2026-02-01T09:45:03.000Z WARN  catalog-api 401 Unauthorized: JWT signature verification failed for sub=e5a12a118d (kid=prod-2024)
+2026-02-01T09:45:08.000Z INFO  catalog-api GET /api/v1/items 200 22499ms
+2026-02-01T09:45:14.000Z WARN  catalog-api jwt.exceptions.InvalidSignatureError: Signature verification failed
+2026-02-01T09:45:18.000Z INFO  kubelet Successfully pulled image for catalog-api
+2026-02-01T09:45:21.000Z INFO  monitor [dev] non-production environment dev; QA test run affected only",authentication_failure,P3,dev
+inc-0658,"ERROR search-api 403 Forbidden: service account search-api@shopnest.iam does not have permission storage.objects.get on bucket shopnest-prod-assets
+ERROR search-api google.api_core.exceptions.Forbidden: 403 GET https://storage.googleapis.com/...: Access denied
+ALERT pagerduty [prod] search-api: error rate 99% across all 4 hosts; checkout unavailable for all users
+INFO  search-api scheduled job 'cleanup' finished in 22528ms",authentication_failure,P1,prod
+inc-1161,"2026-08-02T06:09:04.000Z ERROR checkout-api java.lang.OutOfMemoryError: Java heap space
+2026-08-02T06:09:05.000Z ERROR checkout-api 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+2026-08-02T06:09:14.000Z ERROR checkout-api 	at com.shopnest.report.Exporter.buildRows(Exporter.java:36)
+2026-08-02T06:09:21.000Z WARN  oncall [prod] degraded: checkout-api succeeding after retries, p95 latency elevated for 88% of users",out_of_memory,P2,prod
+inc-0217,"WARN  kubelet Node node-02 condition DiskPressure=True (ephemeral-storage 86% used)
+WARN  kubelet Evicting pod core/user-service-e090c97f32: The node was low on resource: ephemeral-storage.
+ALERT monitor [prod] user-service: error rate 14% on 3 of 8 hosts; some users affected
+INFO  user-service POST /api/v1/orders 201 9642ms",disk_space_full,P2,prod
+inc-0370,"2026-03-15T23:09:06.000Z WARN  kubelet Readiness probe failed: HTTP probe failed with statuscode: 503
+2026-03-15T23:09:12.000Z WARN  kubelet Back-off restarting failed container order-worker in pod order-worker-ad78b5f340_platform; restart count 845
+2026-03-15T23:09:21.000Z INFO  monitor [dev] non-production environment dev; QA test run affected only",kubernetes_crashloop,P3,dev
+inc-0269,"2026-02-05T19:08:07.000Z WARN  cert-monitor certificate for redis.internal expired on 2026-05-22T00:00:00Z (NotAfter); TLS handshake failures rising
+2026-02-05T19:08:09.000Z ERROR checkout-api curl: (60) SSL certificate problem: certificate has expired
+2026-02-05T19:08:14.000Z ALERT monitor [prod] 1 pods of checkout-api unhealthy, traffic shifted to remaining replicas, partial impact",tls_certificate_expired,P2,prod
+inc-0978,"2026-03-23T09:12:01.000Z ERROR recommendation-svc grpc: rpc error: code = DeadlineExceeded desc = context deadline exceeded (timeout 10s) calling inventory.Reserve
+2026-03-23T09:12:03.000Z WARN  recommendation-svc 203 requests exceeded deadline in the last minute
+2026-03-23T09:12:08.000Z ALERT monitor [prod] 3 pods of recommendation-svc unhealthy, traffic shifted to remaining replicas, partial impact",high_latency_timeout,P2,prod
+inc-0312,"2026-05-20T18:08:03.000Z [error] 39941#0: *3 SSL_do_handshake() failed (SSL: error:0A000415:SSL routines::sslv3 alert certificate expired) while SSL handshaking to upstream, upstream: ""https://db.internal:443/""
+2026-05-20T18:08:06.000Z INFO  monitor [prod] payments-svc: 277 errors in the last hour on 1 host; no customer impact reported",tls_certificate_expired,P3,prod
+inc-0348,"2026-10-13T01:18:09.000Z LOG   postgres[55624]: duration: 7114.13 ms  statement: SELECT * FROM orders o JOIN order_items i ON i.order_id = o.id WHERE o.user_id = $1
+2026-10-13T01:18:10.000Z WARN  user-service slow query detected (7114ms) on db=payments_db; lock_wait=2069ms
+2026-10-13T01:18:14.000Z INFO  user-service health check ok (uptime 13h)
+2026-10-13T01:18:17.000Z ALERT oncall [prod] 6/6 replicas affected, customer-facing API returning errors, revenue impact
+2026-10-13T01:18:26.000Z INFO  kubelet Successfully pulled image for user-service",high_latency_timeout,P1,prod
+inc-0902,"2026-06-24T00:44:06.000Z WARN  payments-svc 401 Unauthorized: token expired at 2026-08-13T00:00:00Z for client_id=mobile-app
+2026-06-24T00:44:11.000Z INFO  kubelet Successfully pulled image for payments-svc
+2026-06-24T00:44:12.000Z WARN  payments-svc jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-06-24T00:44:18.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 93% of users",authentication_failure,P2,prod
+inc-0509,"2026-04-06T13:31:01.000Z FATAL postgres[25686]: FATAL:  sorry, too many clients already
+2026-04-06T13:31:10.000Z FATAL postgres[25686]: FATAL:  remaining connection slots are reserved for non-replication superuser connections
+2026-04-06T13:31:12.000Z ERROR auth-gateway psycopg2.OperationalError: FATAL:  too many connections for role ""app""
+2026-04-06T13:31:14.000Z WARN  oncall [prod] degraded: auth-gateway succeeding after retries, p95 latency elevated for 86% of users",database_connection_exhausted,P2,prod
+inc-1000,"ERROR search-api java.lang.OutOfMemoryError: Java heap space
+ERROR search-api 	at java.base/java.util.Arrays.copyOf(Arrays.java:3512)
+ERROR search-api 	at com.shopnest.report.Exporter.buildRows(Exporter.java:41)
+DEBUG search-api cache hit ratio 96%
+WARN  oncall [prod] degraded: search-api succeeding after retries, p95 latency elevated for 96% of users",out_of_memory,P2,prod
+inc-0458,"ALERT prometheus p99 latency for order-worker = 7148ms (threshold 800ms) for 35m
+WARN  order-worker request GET /api/v1/search took 7148ms (slow)
+WARN  oncall [staging] degraded: order-worker succeeding after retries, p95 latency elevated for 91% of users",high_latency_timeout,P2,staging
+inc-1164,"2026-02-04T23:55:06.000Z ERROR order-worker Traceback (most recent call last):
+2026-02-04T23:55:10.000Z ERROR order-worker   File ""/app/api/orders.py"", line 38, in get_order
+2026-02-04T23:55:15.000Z ERROR order-worker     total = order[""items""][0][""price""]
+2026-02-04T23:55:23.000Z ERROR order-worker KeyError: 'price'
+2026-02-04T23:55:32.000Z WARN  oncall [prod] degraded: order-worker succeeding after retries, p95 latency elevated for 90% of users
+2026-02-04T23:55:34.000Z INFO  order-worker scheduled job 'cleanup' finished in 2639ms",application_exception,P2,prod
+inc-0628,"2026-01-13T07:08:01.000Z WARN  kubelet Back-off restarting failed container notification-svc in pod notification-svc-d2f007eee0_prod
+2026-01-13T07:08:02.000Z DEBUG notification-svc cache hit ratio 92%
+2026-01-13T07:08:08.000Z INFO  notification-svc connection to cdn.shopnest.in established
+2026-01-13T07:08:11.000Z INFO  kubectl pod notification-svc-d2f007eee0 status CrashLoopBackOff restarts=99 age=31m
+2026-01-13T07:08:17.000Z INFO  monitor [dev] non-production environment dev; QA test run affected only",kubernetes_crashloop,P3,dev
+inc-0063,"2026-08-05T02:49:02.000Z WARN  recommendation-svc HikariPool-1 - Connection is not available, request timed out after 1671ms.
+2026-08-05T02:49:08.000Z ERROR recommendation-svc java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available
+2026-08-05T02:49:14.000Z WARN  recommendation-svc HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1671ms).
+2026-08-05T02:49:16.000Z DEBUG monitor [staging] seen once during local test run by developer; informational
+2026-08-05T02:49:21.000Z INFO  recommendation-svc POST /api/v1/orders 201 1671ms
+2026-08-05T02:49:29.000Z DEBUG recommendation-svc cache hit ratio 86%",database_connection_exhausted,P4,staging
+inc-0060,"2026-03-03T21:22:06.000Z [error] 46251#0: *31 connect() failed (111: Connection refused) while connecting to upstream, client: 197.14.251.111, server: db.internal, request: ""GET /api/v1/cart HTTP/1.1"", upstream: ""http://10.0.15.230:8080/api/v1/cart""
+2026-03-03T21:22:08.000Z 197.14.251.111 - - ""GET /api/v1/cart HTTP/1.1"" 502 157 ""-"" ""Mozilla/5.0""
+2026-03-03T21:22:10.000Z INFO  kubelet Successfully pulled image for payments-svc
+2026-03-03T21:22:14.000Z INFO  monitor [staging] payments-svc: 715 errors in the last hour on 1 host; no customer impact reported
+2026-03-03T21:22:17.000Z INFO  payments-svc GET /api/v1/items 200 13014ms",upstream_gateway_error,P3,staging
+inc-0558,"2026-04-23T08:22:09.000Z WARN  inventory-api 401 Unauthorized: token expired at 2026-09-01T00:00:00Z for client_id=mobile-app
+2026-04-23T08:22:12.000Z INFO  inventory-api scheduled job 'cleanup' finished in 12428ms
+2026-04-23T08:22:15.000Z WARN  inventory-api jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-04-23T08:22:19.000Z ALERT oncall [prod] 4/4 replicas affected, customer-facing API returning errors, revenue impact",authentication_failure,P1,prod
+inc-0933,"2026-03-17T16:28:02.000Z ERROR migrate alembic.util.exc.CommandError: Can't locate revision identified by '31a2cbd5b7'
+2026-03-17T16:28:05.000Z ERROR deploy-bot pre-deploy migration failed for search-api; deployment aborted
+2026-03-17T16:28:13.000Z INFO  search-api GET /api/v1/items 200 9790ms
+2026-03-17T16:28:14.000Z WARN  oncall [prod] degraded: search-api succeeding after retries, p95 latency elevated for 98% of users",deployment_failure,P2,prod
+inc-0837,"2026-07-04T09:15:07.000Z ERROR search-api sqlalchemy.exc.TimeoutError: QueuePool limit of size 20 overflow 20 reached, connection timed out, timeout 5
+2026-07-04T09:15:15.000Z ERROR search-api could not obtain connection from pool after 17595ms (db=users_db)
+2026-07-04T09:15:22.000Z INFO  search-api POST /api/v1/orders 201 17595ms
+2026-07-04T09:15:23.000Z ALERT monitor [prod] search-api: error rate 34% on 1 of 6 hosts; some users affected",database_connection_exhausted,P2,prod
+inc-0216,"2026-09-17T06:00:02.000Z ERROR checkout-api Unhandled exception in request POST /api/v1/payments: TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'
+2026-09-17T06:00:04.000Z ERROR checkout-api   File ""/app/api/payments.py"", line 8, in apply_discount
+2026-09-17T06:00:08.000Z ALERT monitor [prod] checkout-api: error rate 9% on 3 of 6 hosts; some users affected
+2026-09-17T06:00:10.000Z DEBUG checkout-api cache hit ratio 88%",application_exception,P2,prod
+inc-0865,"WARN  notification-svc HTTP 429 Too Many Requests from https://auth.shopnest.in/v1/charges (retry-after: 48s)
+WARN  notification-svc provider rate limit hit: 874 requests in 60s (limit 200)
+INFO  notification-svc health check ok (uptime 48h)
+INFO  monitor [dev] non-production environment dev; QA test run affected only",rate_limit_exceeded,P3,dev
+inc-0054,"2026-08-17T13:01:04.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/payments-svc:v34.204.75"": rpc error: code = NotFound desc = manifest unknown
+2026-08-17T13:01:10.000Z INFO  kubectl payments-svc-26871ec90a 0/1 ImagePullBackOff 0 34m
+2026-08-17T13:01:11.000Z ALERT pagerduty [prod] payments-svc: error rate 69% across all 12 hosts; checkout unavailable for all users
+2026-08-17T13:01:19.000Z DEBUG payments-svc cache hit ratio 94%
+2026-08-17T13:01:25.000Z INFO  payments-svc connection to api.shopnest.in established",deployment_failure,P1,prod
+inc-1109,"2026-08-28T13:33:06.000Z ERROR postgres[63235]: PANIC:  could not write to file ""pg_wal/xlogtemp.63235"": No space left on device
+2026-08-28T13:33:12.000Z INFO  order-worker connection to db.internal established
+2026-08-28T13:33:15.000Z DEBUG order-worker cache hit ratio 97%
+2026-08-28T13:33:21.000Z ERROR postgres[63235]: LOG:  database system is shut down
+2026-08-28T13:33:28.000Z ALERT pagerduty [prod] order-worker: error rate 60% across all 12 hosts; checkout unavailable for all users",disk_space_full,P1,prod
+inc-0347,"2026-09-06T07:21:05.000Z WARN  kubelet Liveness probe failed: Get ""http://10.0.249.182:8080/health"": dial tcp 10.0.249.182:8080: connect: connection refused
+2026-09-06T07:21:06.000Z INFO  kubelet Container order-worker failed liveness probe, will be restarted
+2026-09-06T07:21:11.000Z INFO  kubectl order-worker-206692e257 0/1 CrashLoopBackOff 136 10m
+2026-09-06T07:21:16.000Z INFO  order-worker GET /api/v1/items 200 18654ms
+2026-09-06T07:21:19.000Z INFO  order-worker health check ok (uptime 10h)
+2026-09-06T07:21:21.000Z WARN  oncall [prod] degraded: order-worker succeeding after retries, p95 latency elevated for 85% of users",kubernetes_crashloop,P2,prod
+inc-1003,"2026-05-02T14:14:02.000Z WARN  auth-gateway 401 Unauthorized: token expired at 2026-08-20T00:00:00Z for client_id=mobile-app
+2026-05-02T14:14:06.000Z WARN  auth-gateway jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-05-02T14:14:14.000Z INFO  monitor [prod] non-production environment prod; QA test run affected only
+2026-05-02T14:14:20.000Z INFO  auth-gateway health check ok (uptime 11h)",authentication_failure,P3,prod
+inc-0730,"2026-01-20T20:44:08.000Z ERROR search-api grpc: rpc error: code = DeadlineExceeded desc = context deadline exceeded (timeout 15s) calling inventory.Reserve
+2026-01-20T20:44:17.000Z WARN  search-api 612 requests exceeded deadline in the last minute
+2026-01-20T20:44:25.000Z WARN  oncall [staging] degraded: search-api succeeding after retries, p95 latency elevated for 97% of users",high_latency_timeout,P2,staging
+inc-0874,"2026-09-24T03:31:05.000Z WARN  checkout-api 401 Unauthorized: JWT signature verification failed for sub=422f192ad2 (kid=prod-2024)
+2026-09-24T03:31:06.000Z INFO  kubelet Successfully pulled image for checkout-api
+2026-09-24T03:31:08.000Z WARN  checkout-api jwt.exceptions.InvalidSignatureError: Signature verification failed
+2026-09-24T03:31:17.000Z INFO  monitor [dev] one-off event in dev, already resolved by auto-restart; logged for record
+2026-09-24T03:31:19.000Z INFO  checkout-api GET /api/v1/items 200 8947ms",authentication_failure,P4,dev
+inc-0171,"2026-10-15T21:43:07.000Z WARN  user-service 401 Unauthorized: token expired at 2026-03-24T00:00:00Z for client_id=mobile-app
+2026-10-15T21:43:14.000Z WARN  user-service jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-10-15T21:43:22.000Z INFO  user-service POST /api/v1/orders 201 9720ms
+2026-10-15T21:43:28.000Z WARN  oncall [staging] degraded: user-service succeeding after retries, p95 latency elevated for 99% of users",authentication_failure,P2,staging
+inc-0006,"2026-02-23T02:00:02.000Z [error] 41089#0: *6 connect() failed (111: Connection refused) while connecting to upstream, client: 23.40.198.83, server: cdn.shopnest.in, request: ""GET /api/v1/cart HTTP/1.1"", upstream: ""http://10.0.36.52:8080/api/v1/cart""
+2026-02-23T02:00:06.000Z DEBUG inventory-api cache hit ratio 85%
+2026-02-23T02:00:12.000Z 23.40.198.83 - - ""GET /api/v1/cart HTTP/1.1"" 502 157 ""-"" ""Mozilla/5.0""
+2026-02-23T02:00:17.000Z WARN  oncall [staging] degraded: inventory-api succeeding after retries, p95 latency elevated for 85% of users",upstream_gateway_error,P2,staging
+inc-0955,"2026-08-24T15:08:04.000Z sshd[62146]: Failed password for invalid user admin from 110.167.254.16 port 48038 ssh2
+2026-08-24T15:08:10.000Z DEBUG recommendation-svc cache hit ratio 85%
+2026-08-24T15:08:11.000Z DEBUG recommendation-svc cache hit ratio 85%
+2026-08-24T15:08:19.000Z sshd[62146]: Failed password for root from 110.167.254.16 port 48038 ssh2
+2026-08-24T15:08:25.000Z sshd[62146]: message repeated 25 times: [ Failed password for root from 110.167.254.16 port 48038 ssh2]
+2026-08-24T15:08:33.000Z INFO  monitor [prod] recommendation-svc: 25 errors in the last hour on 1 host; no customer impact reported",authentication_failure,P3,prod
+inc-0696,"2026-02-02T02:25:08.000Z ERROR report-worker Unhandled exception in request POST /api/v1/payments: TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'
+2026-02-02T02:25:10.000Z ERROR report-worker   File ""/app/api/payments.py"", line 48, in apply_discount
+2026-02-02T02:25:17.000Z ALERT monitor [prod] 3 pods of report-worker unhealthy, traffic shifted to remaining replicas, partial impact
+2026-02-02T02:25:24.000Z INFO  kubelet Successfully pulled image for report-worker",application_exception,P2,prod
+inc-0291,"2026-08-19T05:21:07.000Z WARN  kubelet Failed to pull image ""registry.shopnest.in/report-worker:v22.228.233"": rpc error: code = NotFound desc = manifest unknown
+2026-08-19T05:21:10.000Z INFO  report-worker connection to payments.shopnest.in established
+2026-08-19T05:21:19.000Z INFO  kubectl report-worker-3b1d7ef839 0/1 ImagePullBackOff 0 22m
+2026-08-19T05:21:22.000Z ALERT monitor [prod] report-worker: error rate 33% on 3 of 3 hosts; some users affected",deployment_failure,P2,prod
+inc-1154,"2026-05-27T08:42:07.000Z WARN  kubelet Readiness probe failed: HTTP probe failed with statuscode: 503
+2026-05-27T08:42:15.000Z INFO  auth-gateway health check ok (uptime 15h)
+2026-05-27T08:42:17.000Z WARN  kubelet Back-off restarting failed container auth-gateway in pod auth-gateway-bc069cd309_payments; restart count 208
+2026-05-27T08:42:24.000Z DEBUG auth-gateway cache hit ratio 85%
+2026-05-27T08:42:27.000Z CRIT  monitor [prod] primary database unavailable; all write traffic failing on 12 nodes",kubernetes_crashloop,P1,prod
+inc-0519,"2026-01-15T08:22:03.000Z WARN  payments-svc HikariPool-1 - Connection is not available, request timed out after 26687ms.
+2026-01-15T08:22:06.000Z ERROR payments-svc java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available
+2026-01-15T08:22:10.000Z WARN  payments-svc HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=26687ms).
+2026-01-15T08:22:16.000Z WARN  oncall [prod] degraded: payments-svc succeeding after retries, p95 latency elevated for 94% of users
+2026-01-15T08:22:19.000Z DEBUG payments-svc cache hit ratio 94%",database_connection_exhausted,P2,prod
+inc-0963,"2026-02-16T19:39:08.000Z ERROR order-worker x509: certificate has expired or is not yet valid: current time 2026-02-16T19:39:08.000Z is after 2026-03-27T00:00:00Z
+2026-02-16T19:39:11.000Z INFO  order-worker connection to payments.shopnest.in established
+2026-02-16T19:39:18.000Z ERROR order-worker Get ""https://payments.shopnest.in/v1/token"": x509: certificate has expired
+2026-02-16T19:39:20.000Z ALERT monitor [prod] 1 pods of order-worker unhealthy, traffic shifted to remaining replicas, partial impact",tls_certificate_expired,P2,prod
+inc-0535,"2026-01-28T18:23:01.000Z WARN  notification-svc 401 Unauthorized: token expired at 2026-02-04T00:00:00Z for client_id=mobile-app
+2026-01-28T18:23:03.000Z INFO  notification-svc scheduled job 'cleanup' finished in 6939ms
+2026-01-28T18:23:11.000Z WARN  notification-svc jwt.exceptions.ExpiredSignatureError: Signature has expired
+2026-01-28T18:23:12.000Z ALERT monitor [prod] notification-svc: error rate 17% on 1 of 3 hosts; some users affected",authentication_failure,P2,prod
+inc-0622,"2026-04-08T05:37:03.000Z WARN  kubelet Readiness probe failed: HTTP probe failed with statuscode: 503
+2026-04-08T05:37:04.000Z INFO  billing-cron POST /api/v1/orders 201 21837ms
+2026-04-08T05:37:11.000Z WARN  kubelet Back-off restarting failed container billing-cron in pod billing-cron-8ab766c0f6_core; restart count 343
+2026-04-08T05:37:14.000Z INFO  billing-cron scheduled job 'cleanup' finished in 21837ms
+2026-04-08T05:37:18.000Z INFO  monitor [prod] billing-cron recovered automatically after 13 min; error rate back to 0.88%",kubernetes_crashloop,P3,prod

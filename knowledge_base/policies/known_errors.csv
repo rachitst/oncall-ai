@@ -1,0 +1,13 @@
+id,incident_type,title,root_cause,resolution,date
+KEDB-001,database_connection_exhausted,FATAL: too many connections after traffic spike,Pool size x replicas exceeded max_connections=100,"Added PgBouncer, pool_size reduced to 5 per replica",2026-03-12
+KEDB-002,out_of_memory,OOMKilled in report-worker during month-end export,Export loaded whole table into memory,Streamed export in 10k-row batches; limit raised to 1Gi,2026-02-28
+KEDB-003,disk_space_full,/var full on web-03 from nginx access logs,logrotate disabled by a config change,Restored logrotate daily with 7-day retention; alert at 85%,2026-01-19
+KEDB-004,upstream_gateway_error,502 on checkout after deploy v2.14.0,New version listened on port 8081 instead of 8080,Rolled back; added port check to CI,2026-04-02
+KEDB-005,tls_certificate_expired,api.shopnest.in certificate expired on a Sunday,cert-manager HTTP-01 challenge blocked by new WAF rule,Allowed /.well-known/acme-challenge in WAF; expiry alerts added,2026-05-10
+KEDB-006,kubernetes_crashloop,auth-gateway CrashLoopBackOff after secret rotation,"Secret key name changed, env var missing",Startup config validation added,2026-06-21
+KEDB-007,application_exception,KeyError 'price' on legacy orders,Orders created before 2024 have no price field,Default value and migration backfill,2026-02-05
+KEDB-008,dns_resolution_failure,ENOTFOUND redis.internal in staging,CoreDNS pods evicted under node disk pressure,Resource requests for CoreDNS; disk alerts,2026-03-30
+KEDB-009,rate_limit_exceeded,429 from payments provider during flash sale,Retry storm without backoff,Exponential backoff with jitter; outbound queue,2026-07-15
+KEDB-010,authentication_failure,All mobile logins failing with 401,JWT signing key rotated without overlap period,Dual-key verification window of 24h,2026-08-03
+KEDB-011,high_latency_timeout,p99 9s on search-api,Missing index on products(category_id),Index added; query plan review in CI,2026-09-09
+KEDB-012,deployment_failure,ImagePullBackOff for catalog-api v3.2.1,Image tag pushed to wrong registry project,CI verifies image exists before deploy,2026-09-27

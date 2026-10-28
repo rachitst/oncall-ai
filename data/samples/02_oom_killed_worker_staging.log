@@ -1,0 +1,4 @@
+2026-10-26T22:41:10.502Z WARN  kubelet Pod staging/report-worker-7c9f8b5d4 container report-worker terminated: reason=OOMKilled exitCode=137
+2026-10-26T22:41:12.009Z INFO  kubelet Container report-worker restarted (restart count 3); memory limit 512Mi
+2026-10-26T22:41:20.330Z ERROR report-worker MemoryError: Unable to allocate 6.2 GiB for an array with shape (8100000, 512)
+2026-10-26T22:41:25.100Z WARN  monitor [staging] background jobs for report-worker delayed by 25 min; customer-facing API healthy

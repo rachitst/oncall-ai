@@ -1,0 +1,5 @@
+2026-10-27T15:03:11.880Z ERROR order-worker Traceback (most recent call last):
+2026-10-27T15:03:11.880Z ERROR order-worker   File "/app/api/orders.py", line 212, in get_order
+2026-10-27T15:03:11.880Z ERROR order-worker     total = order["items"][0]["price"]
+2026-10-27T15:03:11.880Z ERROR order-worker KeyError: 'price'
+2026-10-27T15:03:15.002Z INFO  monitor [dev] single occurrence on dev host app-07; no users on this environment

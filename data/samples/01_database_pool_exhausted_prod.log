@@ -1,0 +1,5 @@
+2026-10-27T09:14:02.113Z ERROR checkout-api sqlalchemy.exc.TimeoutError: QueuePool limit of size 10 overflow 20 reached, connection timed out, timeout 30
+2026-10-27T09:14:02.115Z ERROR checkout-api could not obtain connection from pool after 30012ms (db=orders_db)
+2026-10-27T09:14:05.420Z FATAL postgres[28817]: FATAL:  sorry, too many clients already
+2026-10-27T09:14:06.001Z INFO  checkout-api GET /api/v1/items 200 143ms
+2026-10-27T09:14:09.777Z ALERT pagerduty [prod] checkout-api: error rate 94% across all 6 hosts; checkout unavailable for all users

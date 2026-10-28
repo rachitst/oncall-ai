@@ -1,0 +1,34 @@
+{
+  "total": 1200,
+  "train": 840,
+  "val": 180,
+  "test": 180,
+  "incident_types": {
+    "deployment_failure": 100,
+    "rate_limit_exceeded": 100,
+    "out_of_memory": 100,
+    "tls_certificate_expired": 100,
+    "database_connection_exhausted": 100,
+    "upstream_gateway_error": 100,
+    "authentication_failure": 100,
+    "disk_space_full": 100,
+    "kubernetes_crashloop": 100,
+    "dns_resolution_failure": 100,
+    "application_exception": 100,
+    "high_latency_timeout": 100
+  },
+  "severity": {
+    "P2": 420,
+    "P3": 396,
+    "P4": 216,
+    "P1": 168
+  },
+  "environment": {
+    "prod": 672,
+    "staging": 312,
+    "dev": 216
+  },
+  "avg_lines": 4.21,
+  "avg_chars": 454.9,
+  "seed": 42
+}

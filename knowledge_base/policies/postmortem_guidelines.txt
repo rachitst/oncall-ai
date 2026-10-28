@@ -1,0 +1,16 @@
+BLAMELESS POSTMORTEM GUIDELINES
+
+A postmortem is required for every P1 and recommended for every P2. It is written within 5 business days by the
+incident commander with input from everyone involved. The goal is to learn, not to assign blame: describe what the
+system and the process allowed to happen, not who made a mistake.
+
+A good postmortem contains: an accurate timeline built from logs and chat history; a root cause analysis that asks
+"why" at least five times; a clear separation of trigger, root cause and contributing factors; the detection gap
+(how long between the start of the incident and the first alert); the mitigation time; the customer impact in
+numbers; and concrete action items with owners and due dates.
+
+Common action items: add or tune an alert, add a runbook or improve an existing one, add a test, fix a timeout or
+retry policy, add capacity or autoscaling, improve the deployment pipeline with a canary stage, and document the
+dependency.
+
+Review the postmortem in the weekly operations meeting and track action items until they are closed.
