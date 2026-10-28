@@ -11,7 +11,7 @@
 |---|---|
 | Source code | https://github.com/rachitst/oncall-ai |
 | Live demo | https://rachitst--oncall-ai-web.us-east.modal.run (Modal, serverless CPU; first request after idle takes ~30 s) |
-| Fine-tuned model | _(add Hugging Face model URL)_ |
+| Fine-tuned model | https://huggingface.co/rachitst/oncall-ai-incident-classifier (merged QLoRA, Qwen2.5-0.5B-Instruct) |
 | API docs | https://rachitst--oncall-ai-web.us-east.modal.run/docs |
 
 ## Concepts covered (from the lab experiments)
@@ -66,6 +66,22 @@ python scripts/smoke_test.py                              # end-to-end check of 
 
 Without a fine-tuned model yet, set `CLASSIFIER_BACKEND=llm` (cloud LLM classifies) or `rules` (offline keywords).
 Without any key, `LLM_BACKEND=mock EMBEDDING_MODEL=hash` runs everything offline (used by the tests).
+
+## Results (real runs; see `results/` and `docs/RESULTS_SUMMARY.md`)
+
+Five approaches scored on the same 180-log held-out test set (Colab, Tesla T4; `training/OnCall_AI_Training.ipynb`):
+
+| Approach | Type acc. | Type F1 | Sev. acc. | Sev. F1 | Infer ms/log | Train s | Peak GB | Trainable params |
+|---|---|---|---|---|---|---|---|---|
+| Rules baseline | 0.872 | 0.875 | 0.683 | 0.741 | 0 | - | - | - |
+| Qwen-0.5B zero-shot | 0.261 | 0.208 | 0.367 | 0.176 | 942 | - | - | - |
+| Groq qwen3.8-27b zero-shot | 0.944 | 0.943 | 0.800 | 0.812 | 4168 | - | - | - |
+| LoRA fp16 | 1.000 | 1.000 | 1.000 | 1.000 | 1209 | 511.6 | 6.857 | 8,798,208 |
+| QLoRA 4-bit | 1.000 | 1.000 | 1.000 | 1.000 | 1602 | 626.0 | 6.576 | 8,798,208 |
+
+QLoRA matches LoRA accuracy with the base model in 4-bit NF4 (1.72 GB loaded vs 0.93 GB fp16 before adapters; peak training
+memory 6.58 GB vs 6.86 GB). The Groq latency includes the 4 s throttle used for the free tier. The merged QLoRA model is the
+deployed classifier: on the Modal CPU container it classifies a log in 4.1 to 5.3 s (`results/smoke_test_modal.json`).
 
 ## Training and comparison (Colab, T4)
 

@@ -99,8 +99,10 @@ def comparison_tab():
     summary = open(summary_path, encoding="utf-8").read() if os.path.exists(summary_path) else \
         "_Comparison results will appear here after running `training/OnCall_AI_Training.ipynb` and `eval/make_charts.py`._"
     gr.Markdown(summary)
-    if figs:
-        gr.Gallery(value=figs, columns=2, height="auto", label="Comparison charts")
+    for i in range(0, len(figs), 2):                       # two charts per row, full size (a Gallery crops them)
+        with gr.Row():
+            for f in figs[i:i + 2]:
+                gr.Image(value=f, show_label=False, interactive=False, container=False)
 
 
 def build_ui() -> gr.Blocks:

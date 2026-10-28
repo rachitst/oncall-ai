@@ -1,0 +1,37 @@
+{
+  "input_tail": "2026-10-27T12:00:05.000Z DEBUG catalog-api retrying with api_key=gsk_AbCdEfGhIjKlMnOpQrStUvWxYz0123456789 user=priya.sharma@example.com from 10.42.7.19 token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0In0.abcDEFghiJKLmnoPQRstuVWXyz1234567890",
+  "redaction_counts": {
+    "api_key": 1,
+    "jwt": 1,
+    "password_kv": 2,
+    "email": 1
+  },
+  "classification": {
+    "incident_type": "application_exception",
+    "label": "Unhandled application exception",
+    "severity": "P4",
+    "severity_meaning": "Low - informational, single occurrence, no user impact",
+    "confidence": 1.0,
+    "method": "qlora_finetuned",
+    "latency_ms": 19257.8
+  },
+  "timings_ms": {
+    "ingest": 2.5,
+    "classify": 19259.2,
+    "retrieve": 284.6,
+    "analyze": 39280.1,
+    "verify": 0.2,
+    "fallback_analysis": 0.0,
+    "draft_report": 31521.8,
+    "total": 90442.5
+  },
+  "path": [
+    "ingest",
+    "classify",
+    "retrieve",
+    "analyze",
+    "verify",
+    "fallback_analysis",
+    "draft_report"
+  ]
+}

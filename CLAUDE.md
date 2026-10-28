@@ -29,9 +29,9 @@ CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DIS
 - [x] `.env` created with Groq key; LLM_MODEL=qwen/qwen3.8-27b (llama-3.3-70b-versatile retired from Groq); local server runs with CLASSIFIER_BACKEND=llm; smoke test 11/11 PASS (free tier 8k tokens/min -> Retry-After honoured, 2 retries)
 - [x] GitHub repo pushed (public): https://github.com/rachitst/oncall-ai (Space + model links still to fill)
 - [x] Colab notebook run (T4, 2026-10-28): results/comparison.json + figures committed; merged model on HF Hub (rachitst/oncall-ai-incident-classifier, config.json + 988 MB safetensors)
-- [ ] Local server runs with CLASSIFIER_BACKEND=finetuned (model loads on CPU)
-- [x] Deployed on Modal (HF Spaces needs PRO for Docker/Gradio on CPU -> 402): https://rachitst--oncall-ai-web.us-east.modal.run ; /health OK, smoke test 11/11 PASS (currently CLASSIFIER_BACKEND=llm until the model is on the Hub; redeploy with MODAL_CLASSIFIER_BACKEND unset = finetuned)
-- [ ] Screenshots captured per docs/REPORT_STRUCTURE.md
+- [x] Local server runs with CLASSIFIER_BACKEND=finetuned (model loads from cache in ~5 s; ~15-20 s/classification on this no-AVX Celeron; Hub download was flaky -> resumable retry loop)
+- [x] Deployed on Modal (HF Spaces needs PRO for Docker/Gradio on CPU -> 402): https://rachitst--oncall-ai-web.us-east.modal.run ; /health OK, smoke test 11/11 PASS classifier=qlora_finetuned, 4-5 s/classification on Modal CPU, cold start ~37 s; pinned to 1 container (Gradio session state)
+- [x] Screenshots captured per docs/REPORT_STRUCTURE.md (UI from the live Modal app, Swagger 200/422/503, notebook crops, charts, GitHub, HF model, terminal renders); Modal dashboard shots need a logged-in browser
 
 ## Issues encountered (and the fixes kept in the repo)
 - Groq retired `llama-3.3-70b-versatile`; `openai/gpt-oss-120b` spends the 80-token classifier budget on hidden reasoning. Switched to `qwen/qwen3.8-27b` everywhere.

@@ -1,0 +1,358 @@
+{
+  "base_url": "http://127.0.0.1:7860",
+  "health": {
+    "status": "ok",
+    "knowledge_chunks": 107,
+    "knowledge_file_types": [
+      ".csv",
+      ".md",
+      ".txt"
+    ],
+    "classifier": "qlora_finetuned",
+    "llm_backend": "openai_compatible",
+    "llm_model": "qwen/qwen3.8-27b",
+    "uptime_s": 621.8
+  },
+  "pause_s": 20.0,
+  "rows": [
+    {
+      "test": "GET /health",
+      "expected": "200 ok",
+      "actual": "200 ok",
+      "passed": true
+    },
+    {
+      "test": "01_database_pool_exhausted_prod.log",
+      "expected": "database_connection_exhausted P1",
+      "actual": "database_connection_exhausted P1 conf 1.0 grounded=False human=True 140618ms",
+      "passed": true
+    },
+    {
+      "test": "02_oom_killed_worker_staging.log",
+      "expected": "out_of_memory P2/P3",
+      "actual": "out_of_memory P2 conf 1.0 grounded=False human=True 136666ms",
+      "passed": true
+    },
+    {
+      "test": "03_tls_certificate_expired_prod.log",
+      "expected": "tls_certificate_expired P1",
+      "actual": "tls_certificate_expired P2 conf 0.999 grounded=False human=True 78821ms",
+      "passed": false
+    },
+    {
+      "test": "04_python_keyerror_dev.log",
+      "expected": "application_exception P3/P4",
+      "actual": "application_exception P4 conf 1.0 grounded=False human=True 135888ms",
+      "passed": true
+    },
+    {
+      "test": "05_crashloop_after_deploy_prod.log",
+      "expected": "kubernetes_crashloop P2",
+      "actual": "kubernetes_crashloop P2 conf 1.0 grounded=False human=True 139239ms",
+      "passed": true
+    },
+    {
+      "test": "06_rate_limited_provider_prod.log",
+      "expected": "rate_limit_exceeded P2",
+      "actual": "rate_limit_exceeded P2 conf 1.0 grounded=True human=False 119925ms",
+      "passed": true
+    },
+    {
+      "test": "07_unknown_noise.log",
+      "expected": "any / needs_human",
+      "actual": "deployment_failure P2 conf 0.977 grounded=False human=True 134876ms",
+      "passed": true
+    },
+    {
+      "test": "empty log",
+      "expected": "422 invalid_request",
+      "actual": "422 invalid_request",
+      "passed": true
+    },
+    {
+      "test": "20,001-char log",
+      "expected": "422 invalid_request",
+      "actual": "422 invalid_request",
+      "passed": true
+    },
+    {
+      "test": "GET /api/analyze",
+      "expected": "405",
+      "actual": "405",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "sample": "01_database_pool_exhausted_prod.log",
+      "status": 200,
+      "client_ms": 140617.9,
+      "result": {
+        "classification": {
+          "incident_type": "database_connection_exhausted",
+          "label": "Database connection pool exhausted",
+          "severity": "P1",
+          "severity_meaning": "Critical - production outage or data at risk; page on-call immediately",
+          "confidence": 1.0,
+          "method": "qlora_finetuned",
+          "latency_ms": 19877.9
+        },
+        "grounded": false,
+        "needs_human": true,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "fallback_analysis",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.2,
+          "classify": 19888.4,
+          "retrieve": 261.2,
+          "analyze": 60218.1,
+          "verify": 0.0,
+          "fallback_analysis": 0.0,
+          "draft_report": 60223.2,
+          "total": 140604.1
+        },
+        "llm_calls": 0,
+        "redaction_counts": {}
+      }
+    },
+    {
+      "sample": "02_oom_killed_worker_staging.log",
+      "status": 200,
+      "client_ms": 136665.9,
+      "result": {
+        "classification": {
+          "incident_type": "out_of_memory",
+          "label": "Out of memory (OOM)",
+          "severity": "P2",
+          "severity_meaning": "Major - production degraded for many users; respond within 30 minutes",
+          "confidence": 1.0,
+          "method": "qlora_finetuned",
+          "latency_ms": 16107.5
+        },
+        "grounded": false,
+        "needs_human": true,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "fallback_analysis",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.2,
+          "classify": 16107.7,
+          "retrieve": 215.9,
+          "analyze": 60176.7,
+          "verify": 0.0,
+          "fallback_analysis": 0.0,
+          "draft_report": 60143.5,
+          "total": 136649.1
+        },
+        "llm_calls": 0,
+        "redaction_counts": {}
+      }
+    },
+    {
+      "sample": "03_tls_certificate_expired_prod.log",
+      "status": 200,
+      "client_ms": 78820.8,
+      "result": {
+        "classification": {
+          "incident_type": "tls_certificate_expired",
+          "label": "TLS certificate expired / invalid",
+          "severity": "P2",
+          "severity_meaning": "Major - production degraded for many users; respond within 30 minutes",
+          "confidence": 0.999,
+          "method": "qlora_finetuned",
+          "latency_ms": 17168.5
+        },
+        "grounded": false,
+        "needs_human": true,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "fallback_analysis",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.2,
+          "classify": 17168.7,
+          "retrieve": 301.0,
+          "analyze": 60161.1,
+          "verify": 0.0,
+          "fallback_analysis": 0.0,
+          "draft_report": 1157.7,
+          "total": 78795.0
+        },
+        "llm_calls": 1,
+        "redaction_counts": {}
+      }
+    },
+    {
+      "sample": "04_python_keyerror_dev.log",
+      "status": 200,
+      "client_ms": 135887.8,
+      "result": {
+        "classification": {
+          "incident_type": "application_exception",
+          "label": "Unhandled application exception",
+          "severity": "P4",
+          "severity_meaning": "Low - informational, single occurrence, no user impact",
+          "confidence": 1.0,
+          "method": "qlora_finetuned",
+          "latency_ms": 15325.4
+        },
+        "grounded": false,
+        "needs_human": true,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "fallback_analysis",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.2,
+          "classify": 15325.5,
+          "retrieve": 185.4,
+          "analyze": 60155.7,
+          "verify": 0.0,
+          "fallback_analysis": 0.0,
+          "draft_report": 60193.3,
+          "total": 135867.6
+        },
+        "llm_calls": 0,
+        "redaction_counts": {}
+      }
+    },
+    {
+      "sample": "05_crashloop_after_deploy_prod.log",
+      "status": 200,
+      "client_ms": 139238.9,
+      "result": {
+        "classification": {
+          "incident_type": "kubernetes_crashloop",
+          "label": "Kubernetes CrashLoopBackOff",
+          "severity": "P2",
+          "severity_meaning": "Major - production degraded for many users; respond within 30 minutes",
+          "confidence": 1.0,
+          "method": "qlora_finetuned",
+          "latency_ms": 18586.5
+        },
+        "grounded": false,
+        "needs_human": true,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "fallback_analysis",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.2,
+          "classify": 18586.7,
+          "retrieve": 269.0,
+          "analyze": 60186.6,
+          "verify": 0.0,
+          "fallback_analysis": 0.0,
+          "draft_report": 60174.7,
+          "total": 139225.4
+        },
+        "llm_calls": 0,
+        "redaction_counts": {}
+      }
+    },
+    {
+      "sample": "06_rate_limited_provider_prod.log",
+      "status": 200,
+      "client_ms": 119925.4,
+      "result": {
+        "classification": {
+          "incident_type": "rate_limit_exceeded",
+          "label": "Rate limit / quota exceeded",
+          "severity": "P2",
+          "severity_meaning": "Major - production degraded for many users; respond within 30 minutes",
+          "confidence": 1.0,
+          "method": "qlora_finetuned",
+          "latency_ms": 16575.0
+        },
+        "grounded": true,
+        "needs_human": false,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.2,
+          "classify": 16575.1,
+          "retrieve": 221.3,
+          "analyze": 42898.2,
+          "verify": 0.0,
+          "draft_report": 60196.9,
+          "total": 119897.4
+        },
+        "llm_calls": 1,
+        "redaction_counts": {}
+      }
+    },
+    {
+      "sample": "07_unknown_noise.log",
+      "status": 200,
+      "client_ms": 134876.4,
+      "result": {
+        "classification": {
+          "incident_type": "deployment_failure",
+          "label": "Deployment / rollout failure",
+          "severity": "P2",
+          "severity_meaning": "Major - production degraded for many users; respond within 30 minutes",
+          "confidence": 0.977,
+          "method": "qlora_finetuned",
+          "latency_ms": 14426.9
+        },
+        "grounded": false,
+        "needs_human": true,
+        "path": [
+          "ingest",
+          "classify",
+          "retrieve",
+          "analyze",
+          "verify",
+          "fallback_analysis",
+          "draft_report"
+        ],
+        "timings_ms": {
+          "ingest": 0.1,
+          "classify": 14427.0,
+          "retrieve": 133.4,
+          "analyze": 60169.2,
+          "verify": 0.0,
+          "fallback_analysis": 0.0,
+          "draft_report": 60125.2,
+          "total": 134860.1
+        },
+        "llm_calls": 0,
+        "redaction_counts": {}
+      }
+    }
+  ]
+}
