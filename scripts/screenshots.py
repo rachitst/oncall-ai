@@ -55,7 +55,7 @@ with sync_playwright() as p:
         for idx, name in SAMPLES.items():
             page.goto(args.base, wait_until="networkidle")
             # click the example row, then Analyze
-            page.locator(".gallery button, .examples button, button.gallery-item").filter(has_text=idx).first.click()
+            page.locator("button").filter(has_text=f"{idx} ").first.click()
             time.sleep(1)
             page.get_by_role("button", name="Analyze", exact=True).click()
             page.wait_for_function("document.body.innerText.includes('confidence ')", timeout=300_000)
