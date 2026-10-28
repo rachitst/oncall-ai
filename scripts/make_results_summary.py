@@ -134,8 +134,9 @@ captions = {
     "hf_model_files.png": "Hugging Face model files (config.json, model.safetensors, tokenizer).",
     "terminal_pytest.png": "pytest -q: 17 passed (offline suite).",
     "terminal_smoke_test.png": "Local smoke test with CLASSIFIER_BACKEND=finetuned.",
-    "modal_app_running.png": "Modal dashboard: deployed app oncall-ai (live demo).",
-    "modal_secret.png": "Modal dashboard: secret oncall-ai holding LLM_API_KEY (value masked).",
+    "modal_cli_app_secret.png": "Modal CLI: deployed app, secret oncall-ai (value never shown), HF cache volume, live /health.",
+    "modal_app_running.png": "Modal dashboard: deployed app oncall-ai (live demo) — needs a logged-in browser.",
+    "modal_secret.png": "Modal dashboard: secret oncall-ai holding LLM_API_KEY (value masked) — needs a logged-in browser.",
 }
 present = sorted(os.path.basename(p) for p in glob.glob(os.path.join(ROOT, "docs", "screenshots", "*.png")))
 for f in present:
@@ -151,7 +152,7 @@ local = smoke["Local (Celeron N4500, 2 cores, no AVX)"]
 s03 = next(r for r in local["rows"] if r["test"].startswith("03"))
 w(f"- Hand-written sample 03 (TLS expired, prod, '100% of requests failing') is classified **{s03['actual'].split(' conf')[0]}** by the fine-tuned model although the policy expects P1: the generator's P1 wording ('error rate NN% across all N hosts', 'all users', 'primary database unavailable') never uses that phrase, so this is a distribution-shift miss of the synthetic data, visible only outside the test set.")
 w("- Sample 07 (INFO noise only) gets a confident wrong type from the fine-tuned model (no 'unknown' class); the grounding check in the `verify` node catches it (ungrounded → needs human review), which is why the workflow has that node.")
-w("- Groq free tier allows 8,000 tokens/minute: bursts of requests trigger 429s; the backend honours Retry-After (≤30 s, 2 retries) and otherwise degrades to safe fallback output. Latency numbers in the smoke tables include those waits when they occurred.")
+w("- Groq free tier allows 8,000 tokens/minute and 200,000 tokens/day per model. After the Colab baseline and repeated smoke tests the 27B model's daily quota was exhausted, so the backend now switches to `LLM_FALLBACK_MODEL` (openai/gpt-oss-120b) on a per-day 429; the smoke tables above were produced with that fallback active (the answering model is recorded in `analysis.model`). Per-minute 429s are retried honouring Retry-After (≤30 s, 2 retries).")
 w("- Hugging Face Spaces refused a Docker Space on the free CPU tier (PRO required), so the live demo runs on Modal with the same container definition; the Dockerfile and `scripts/deploy_space.py` remain for a PRO account.")
 w("")
 

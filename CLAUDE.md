@@ -40,6 +40,7 @@ CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DIS
 - Invalid API key returned 200 with an empty template report (every node swallowed BackendError). Permanent kinds (missing/invalid key, unknown model) now raise -> HTTP 503; transient ones still degrade. Tests added.
 - pytest collected `scripts/smoke_test.py` (filename pattern) -> `pytest.ini` with `testpaths = tests`.
 - Hugging Face Spaces returned 402: Docker/Gradio Spaces on cpu-basic need a PRO plan. Live demo moved to Modal (`deploy/modal_app.py`); `scripts/deploy_space.py` kept for PRO accounts.
+- Fine-tuned model misses hand-written sample 03 severity (P2 instead of P1, conf 0.999): the generator never phrases P1 as '100% of requests failing' -> documented as a synthetic-data distribution-shift limitation, smoke test left as FAIL on purpose (10/11).
 - Local laptop (Celeron N4500, 2 cores, no AVX): 0.5B classifier ~17-19 s/request on CPU; int8 dynamic quantization crashes (Illegal instruction). CPU latency is measured on Modal instead.
 - Colab notebook (fixes made on Colab and kept in `training/OnCall_AI_Training.ipynb`):
   - `pip uninstall torchao` in Step 2 (peft vs Colab's torchao 0.10).

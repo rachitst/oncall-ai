@@ -81,7 +81,7 @@ Five approaches scored on the same 180-log held-out test set (Colab, Tesla T4; `
 
 QLoRA matches LoRA accuracy with the base model in 4-bit NF4 (1.72 GB loaded vs 0.93 GB fp16 before adapters; peak training
 memory 6.58 GB vs 6.86 GB). The Groq latency includes the 4 s throttle used for the free tier. The merged QLoRA model is the
-deployed classifier: on the Modal CPU container it classifies a log in 4.1 to 5.3 s (`results/smoke_test_modal.json`).
+deployed classifier: on the Modal CPU container it classifies a log in 3.6 to 5.0 s (`results/smoke_test_modal.json`).
 
 ## Training and comparison (Colab, T4)
 
