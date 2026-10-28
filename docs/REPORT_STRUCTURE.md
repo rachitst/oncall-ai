@@ -11,5 +11,9 @@
 Screenshots to capture during the run (save to docs/screenshots/):
 - ui_analyze_prod_db.png, ui_sources.png, ui_report.png, ui_lowconfidence.png, ui_comparison_tab.png, ui_architecture_tab.png
 - swagger_docs.png, swagger_analyze_200.png, swagger_422.png, swagger_503_wrong_key.png
-- hf_space_running.png, hf_space_settings_secrets.png (mask values), hf_model_repo.png
-- github_repo.png, colab_training_charts.png, colab_comparison_table.png, terminal_pytest.png, terminal_smoke_test.png
+- modal_app_running.png (live demo; HF Spaces needs PRO for Docker on CPU), modal_secret.png (mask values), hf_model_repo.png
+- github_repo.png, terminal_pytest.png, terminal_smoke_test.png
+- from the executed notebook (training/OnCall_AI_Training.ipynb via nbconvert + Playwright): colab_step3_env_dataset.png, colab_step7_groq.png,
+  colab_step10_lora_training.png, colab_step11_qlora_training.png, colab_comparison_table.png, colab_step13_merge_push.png
+- charts copied from results/figures/: chart_type_accuracy_f1.png, chart_severity_accuracy_f1.png, chart_training_resources.png,
+  chart_inference_latency_memory.png, chart_confusion_matrix.png, chart_loss_curves.png

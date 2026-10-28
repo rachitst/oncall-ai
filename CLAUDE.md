@@ -28,7 +28,20 @@ CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DIS
 - [x] venv + deps installed (uv-managed Python 3.11 in .venv; torch 2.15 cpu, transformers 5.21, gradio 6.31), dataset 1200 = 840/180/180, `pytest -q` green (15 passed; added pytest.ini so scripts/smoke_test.py is not collected)
 - [x] `.env` created with Groq key; LLM_MODEL=qwen/qwen3.8-27b (llama-3.3-70b-versatile retired from Groq); local server runs with CLASSIFIER_BACKEND=llm; smoke test 11/11 PASS (free tier 8k tokens/min -> Retry-After honoured, 2 retries)
 - [x] GitHub repo pushed (public): https://github.com/rachitst/oncall-ai (Space + model links still to fill)
-- [ ] Colab notebook run: results/comparison.json + figures committed; model on HF Hub
+- [x] Colab notebook run (T4, 2026-10-28): results/comparison.json + figures committed; merged model on HF Hub (rachitst/oncall-ai-incident-classifier, config.json + 988 MB safetensors)
 - [ ] Local server runs with CLASSIFIER_BACKEND=finetuned (model loads on CPU)
 - [x] Deployed on Modal (HF Spaces needs PRO for Docker/Gradio on CPU -> 402): https://rachitst--oncall-ai-web.us-east.modal.run ; /health OK, smoke test 11/11 PASS (currently CLASSIFIER_BACKEND=llm until the model is on the Hub; redeploy with MODAL_CLASSIFIER_BACKEND unset = finetuned)
 - [ ] Screenshots captured per docs/REPORT_STRUCTURE.md
+
+## Issues encountered (and the fixes kept in the repo)
+- Groq retired `llama-3.3-70b-versatile`; `openai/gpt-oss-120b` spends the 80-token classifier budget on hidden reasoning. Switched to `qwen/qwen3.8-27b` everywhere.
+- Groq free tier = 8,000 tokens/min: smoke-test bursts hit 429. Backend now honours `Retry-After` (<=30 s) with `LLM_MAX_RETRIES=2`; `SMOKE_PAUSE_S` spaces out samples.
+- Invalid API key returned 200 with an empty template report (every node swallowed BackendError). Permanent kinds (missing/invalid key, unknown model) now raise -> HTTP 503; transient ones still degrade. Tests added.
+- pytest collected `scripts/smoke_test.py` (filename pattern) -> `pytest.ini` with `testpaths = tests`.
+- Hugging Face Spaces returned 402: Docker/Gradio Spaces on cpu-basic need a PRO plan. Live demo moved to Modal (`deploy/modal_app.py`); `scripts/deploy_space.py` kept for PRO accounts.
+- Local laptop (Celeron N4500, 2 cores, no AVX): 0.5B classifier ~17-19 s/request on CPU; int8 dynamic quantization crashes (Illegal instruction). CPU latency is measured on Modal instead.
+- Colab notebook (fixes made on Colab and kept in `training/OnCall_AI_Training.ipynb`):
+  - `pip uninstall torchao` in Step 2 (peft vs Colab's torchao 0.10).
+  - `warmup_steps=16` instead of `warmup_ratio` (transformers 5.21 removed it).
+  - Groq daily quota exhausted by repeated runs: Step 7 is quota-safe (`llm_max_retries=0`, stops after 3 consecutive 429s, reuses a saved predictions CSV); `N_LLM_EVAL` lowered to 90 for re-runs.
+  - `.png` filter in the Step 12 display loop (`.gitkeep` in figures/).
