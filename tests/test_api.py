@@ -55,3 +55,27 @@ def test_validation_errors(client, payload):
 def test_wrong_method_and_unknown_path(client):
     assert client.get("/api/analyze").status_code == 405
     assert client.get("/api/nope").status_code == 404
+
+
+def test_fatal_backend_error_returns_503(client, monkeypatch):
+    from app.llm import BackendError
+    wf = client.app.state.workflow
+
+    def boom(*a, **k):
+        raise BackendError("authentication_failed", 401)
+    monkeypatch.setattr(wf.backend, "generate", boom)
+    r = client.post("/api/analyze", json={"log_text": "FATAL: too many connections for role app"})
+    assert r.status_code == 503 and r.json()["error"] == "backend_unavailable"
+
+
+def test_transient_backend_error_degrades_gracefully(client, monkeypatch):
+    from app.llm import BackendError
+    wf = client.app.state.workflow
+
+    def flaky(*a, **k):
+        raise BackendError("rate_limited_or_quota_exceeded", 429)
+    monkeypatch.setattr(wf.backend, "generate", flaky)
+    r = client.post("/api/analyze", json={"log_text": open("data/samples/01_database_pool_exhausted_prod.log").read()})
+    assert r.status_code == 200
+    b = r.json()
+    assert b["needs_human"] is True and any("rate_limited" in e for e in b["errors"]) and b["incident_report"].startswith("#")

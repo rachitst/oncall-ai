@@ -92,7 +92,9 @@ class IncidentWorkflow:
         try:
             c: Classification = self.classifier.classify(state["log_text"])
         except BackendError as exc:
-            # classification via the cloud LLM failed -> keyword fallback keeps the service working
+            if exc.fatal:                      # bad key / missing model: surface as 503 instead of a useless result
+                raise
+            # transient failure of the cloud LLM -> keyword fallback keeps the service working
             from .classifier import RulesClassifier
             logger.error("classify_backend_error kind=%s; using rules fallback", exc.kind)
             c = RulesClassifier().classify(state["log_text"])
@@ -137,6 +139,8 @@ class IncidentWorkflow:
                 errors.append(f"analyze: invalid JSON on attempt {attempt + 1}")
                 user += "\n\nIMPORTANT: reply with a single valid JSON object only."
             except BackendError as exc:
+                if exc.fatal:
+                    raise
                 errors.append(f"analyze: backend {exc.kind}")
                 break
         if analysis is None:
@@ -198,6 +202,8 @@ class IncidentWorkflow:
             llm_calls += 1
             report = gen.text
         except BackendError as exc:
+            if exc.fatal:
+                raise
             errors.append(f"draft_report: backend {exc.kind}")
             report = self._template_report(state)
         if not report.strip().startswith("#"):

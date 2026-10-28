@@ -18,11 +18,20 @@ from .config import Settings
 logger = logging.getLogger("oncall.llm")
 
 
+# Permanent failures: the service cannot produce a useful analysis until configuration is fixed -> HTTP 503.
+# Everything else (timeouts, rate limits, 5xx, bad JSON) is transient and the workflow degrades gracefully.
+FATAL_KINDS = {"configuration_missing_api_key", "authentication_failed", "model_or_endpoint_not_found"}
+
+
 class BackendError(Exception):
     def __init__(self, kind: str, upstream_status: Optional[int] = None):
         super().__init__(kind)
         self.kind = kind
         self.upstream_status = upstream_status
+
+    @property
+    def fatal(self) -> bool:
+        return self.kind in FATAL_KINDS
 
 
 @dataclass
