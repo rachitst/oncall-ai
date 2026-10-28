@@ -26,7 +26,7 @@ CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DIS
 
 ## Status checklist (update as you go)
 - [x] venv + deps installed (uv-managed Python 3.11 in .venv; torch 2.15 cpu, transformers 5.21, gradio 6.31), dataset 1200 = 840/180/180, `pytest -q` green (15 passed; added pytest.ini so scripts/smoke_test.py is not collected)
-- [ ] `.env` created with Groq key; local server runs with CLASSIFIER_BACKEND=llm; smoke test passes
+- [x] `.env` created with Groq key; LLM_MODEL=qwen/qwen3.8-27b (llama-3.3-70b-versatile retired from Groq); local server runs with CLASSIFIER_BACKEND=llm; smoke test 11/11 PASS (free tier 8k tokens/min -> Retry-After honoured, 2 retries)
 - [ ] GitHub repo pushed (public), README links filled
 - [ ] Colab notebook run: results/comparison.json + figures committed; model on HF Hub
 - [ ] Local server runs with CLASSIFIER_BACKEND=finetuned (model loads on CPU)

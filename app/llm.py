@@ -91,7 +91,7 @@ class OpenAICompatibleBackend:
             if (status == 429 or status >= 500) and attempt < self.settings.llm_max_retries:
                 attempt += 1
                 try:
-                    wait_s = min(5.0, float(response.headers.get("retry-after", "1")))
+                    wait_s = min(30.0, float(response.headers.get("retry-after", "2")))
                 except ValueError:
                     wait_s = 1.0
                 logger.warning("llm_retry upstream_status=%s attempt=%d wait_s=%.1f", status, attempt, wait_s)

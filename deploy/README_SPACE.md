@@ -18,6 +18,6 @@ cloud LLM verified against the runbook, and drafts an incident report — orches
 FastAPI service (`/docs`, `/health`).
 
 Required Space settings — **Secrets:** `LLM_API_KEY` · **Variables:** `FINETUNED_MODEL`, `CLASSIFIER_BACKEND=finetuned`,
-`LLM_MODEL=llama-3.3-70b-versatile`, `LLM_BASE_URL=https://api.groq.com/openai/v1`.
+`LLM_MODEL=qwen/qwen3.8-27b`, `LLM_BASE_URL=https://api.groq.com/openai/v1`.
 
 Author: Rachit Manish Chheda (UID 2024301004) · Source: GitHub `rachitst/oncall-ai`

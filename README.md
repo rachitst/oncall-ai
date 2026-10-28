@@ -76,7 +76,7 @@ Then commit `results/` to this repository and set `FINETUNED_MODEL=<hf-repo>` in
 ## Deployment (Hugging Face Spaces, Docker, free CPU)
 
 1. Create a Space (SDK: **Docker**), copy `deploy/README_SPACE.md` to the Space as `README.md`, push this repository's files.
-2. Space settings → Secrets: `LLM_API_KEY`; Variables: `FINETUNED_MODEL`, `CLASSIFIER_BACKEND=finetuned`, `LLM_MODEL`.
+2. Space settings → Secrets: `LLM_API_KEY`; Variables: `FINETUNED_MODEL`, `CLASSIFIER_BACKEND=finetuned`, `CLASSIFIER_FALLBACK=llm`, `LLM_MODEL=qwen/qwen3.8-27b`, `LLM_BASE_URL=https://api.groq.com/openai/v1`.
 3. The container starts `uvicorn app.api:app --port 7860`; `/health` reports the loaded components.
 
 ## API

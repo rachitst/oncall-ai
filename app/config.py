@@ -40,12 +40,12 @@ class Settings:
     # cloud LLM (OpenAI-compatible chat completions)
     llm_backend: str = "openai_compatible"            # or "mock"
     llm_base_url: str = "https://api.groq.com/openai/v1"
-    llm_model: str = "llama-3.3-70b-versatile"
+    llm_model: str = "qwen/qwen3.8-27b"
     llm_api_key: str = field(default="", repr=False)
     llm_timeout_s: float = 45.0
     llm_max_tokens: int = 900
     llm_temperature: float = 0.1
-    llm_max_retries: int = 1
+    llm_max_retries: int = 2
 
     # API limits
     max_log_chars: int = 20000
