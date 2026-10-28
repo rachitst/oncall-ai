@@ -41,6 +41,7 @@ class Settings:
     llm_backend: str = "openai_compatible"            # or "mock"
     llm_base_url: str = "https://api.groq.com/openai/v1"
     llm_model: str = "qwen/qwen3.8-27b"
+    llm_fallback_model: str = "openai/gpt-oss-120b"  # used when the primary model's daily quota is exhausted ("" = off)
     llm_api_key: str = field(default="", repr=False)
     llm_timeout_s: float = 45.0
     llm_max_tokens: int = 900
@@ -68,6 +69,7 @@ class Settings:
             llm_backend=os.getenv("LLM_BACKEND", d.llm_backend).strip().lower(),
             llm_base_url=os.getenv("LLM_BASE_URL", d.llm_base_url).rstrip("/"),
             llm_model=os.getenv("LLM_MODEL", d.llm_model),
+            llm_fallback_model=os.getenv("LLM_FALLBACK_MODEL", d.llm_fallback_model).strip(),
             llm_api_key=os.getenv("LLM_API_KEY", os.getenv("GROQ_API_KEY", "")).strip(),
             llm_timeout_s=float(os.getenv("LLM_TIMEOUT_SECONDS", d.llm_timeout_s)),
             llm_max_tokens=int(os.getenv("LLM_MAX_TOKENS", d.llm_max_tokens)),
@@ -85,6 +87,7 @@ class Settings:
             "llm_backend": self.llm_backend,
             "llm_base_url": self.llm_base_url,
             "llm_model": self.llm_model,
+            "llm_fallback_model": self.llm_fallback_model or None,
             "api_key_configured": bool(self.llm_api_key),
             "embedding_model": self.embedding_model,
             "top_k": self.top_k,

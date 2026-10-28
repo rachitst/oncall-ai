@@ -29,6 +29,7 @@ IMAGE_ENV = {
     "LLM_BACKEND": "openai_compatible",
     "LLM_BASE_URL": "https://api.groq.com/openai/v1",
     "LLM_MODEL": os.getenv("LLM_MODEL", "qwen/qwen3.8-27b"),
+    "LLM_FALLBACK_MODEL": os.getenv("LLM_FALLBACK_MODEL", "openai/gpt-oss-120b"),   # when the primary's daily quota is gone
     "LLM_MAX_RETRIES": "2",
     "EMBEDDING_MODEL": "sentence-transformers/all-MiniLM-L6-v2",
     "HF_HOME": "/cache/huggingface",

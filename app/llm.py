@@ -79,10 +79,12 @@ class OpenAICompatibleBackend:
         self._client = httpx.Client(base_url=settings.llm_base_url, headers=headers,
                                     timeout=httpx.Timeout(settings.llm_timeout_s, connect=10.0))
 
-    def generate(self, messages: list[dict], max_tokens: Optional[int] = None, json_mode: bool = False) -> Generation:
+    def generate(self, messages: list[dict], max_tokens: Optional[int] = None, json_mode: bool = False,
+                 model: Optional[str] = None) -> Generation:
         if not self.settings.llm_api_key:
             raise BackendError("configuration_missing_api_key")
-        payload = {"model": self.settings.llm_model, "messages": messages,
+        model = model or self.settings.llm_model
+        payload = {"model": model, "messages": messages,
                    "temperature": self.settings.llm_temperature,
                    "max_tokens": max_tokens or self.settings.llm_max_tokens}
         if json_mode:
@@ -97,6 +99,12 @@ class OpenAICompatibleBackend:
             except httpx.TransportError:
                 raise BackendError("network_error") from None
             status = response.status_code
+            if status == 429 and self._daily_quota_exhausted(response) and self._fallback_available(model):
+                # the primary model's per-day quota is gone for hours: switch to the fallback model for this call
+                logger.warning("llm_fallback_model primary=%s fallback=%s reason=daily_quota", model,
+                               self.settings.llm_fallback_model)
+                return self.generate(messages, max_tokens=max_tokens, json_mode=json_mode,
+                                     model=self.settings.llm_fallback_model)
             if (status == 429 or status >= 500) and attempt < self.settings.llm_max_retries:
                 attempt += 1
                 try:
@@ -112,6 +120,11 @@ class OpenAICompatibleBackend:
         if status == 404:
             raise BackendError("model_or_endpoint_not_found", status)
         if status == 429:
+            if self._fallback_available(model):           # per-minute limit still busy after the retries: last resort
+                logger.warning("llm_fallback_model primary=%s fallback=%s reason=retries_exhausted", model,
+                               self.settings.llm_fallback_model)
+                return self.generate(messages, max_tokens=max_tokens, json_mode=json_mode,
+                                     model=self.settings.llm_fallback_model)
             raise BackendError("rate_limited_or_quota_exceeded", status)
         if status >= 500:
             raise BackendError("provider_server_error", status)
@@ -119,7 +132,7 @@ class OpenAICompatibleBackend:
             # some providers reject response_format; retry once without it
             if json_mode:
                 logger.warning("llm_json_mode_rejected upstream_status=%s; retrying without response_format", status)
-                return self.generate(messages, max_tokens=max_tokens, json_mode=False)
+                return self.generate(messages, max_tokens=max_tokens, json_mode=False, model=model)
             raise BackendError("request_rejected_by_provider", status)
         try:
             data = response.json()
@@ -127,9 +140,22 @@ class OpenAICompatibleBackend:
             usage = data.get("usage") or {}
         except (ValueError, KeyError, IndexError, TypeError):
             raise BackendError("invalid_provider_response", status) from None
-        return Generation(text=text.strip(), model=data.get("model", self.settings.llm_model),
+        return Generation(text=text.strip(), model=data.get("model", model),
                           prompt_tokens=usage.get("prompt_tokens"), completion_tokens=usage.get("completion_tokens"),
                           latency_ms=(time.perf_counter() - t0) * 1000)
+
+    def _fallback_available(self, model: str) -> bool:
+        fb = self.settings.llm_fallback_model
+        return bool(fb) and fb != model and model == self.settings.llm_model
+
+    @staticmethod
+    def _daily_quota_exhausted(response) -> bool:
+        """Groq reports per-day limits as 429 with 'tokens per day (TPD)' / 'per day' in the error message."""
+        try:
+            msg = str(response.json().get("error", {}).get("message", "")).lower()
+        except ValueError:
+            msg = response.text.lower()
+        return "per day" in msg or "tpd" in msg
 
     def close(self) -> None:
         self._client.close()

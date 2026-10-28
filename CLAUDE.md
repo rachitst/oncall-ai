@@ -21,7 +21,7 @@ Deadline is immediate; the goal is a working, deployed, documented demo — not 
 - Charts from training results:   `python eval/make_charts.py`
 
 ## Configuration (env vars)
-LLM_API_KEY (Groq), LLM_MODEL, LLM_BASE_URL, CLASSIFIER_BACKEND=finetuned|llm|rules, FINETUNED_MODEL (HF repo id),
+LLM_API_KEY (Groq), LLM_MODEL, LLM_FALLBACK_MODEL, LLM_BASE_URL, CLASSIFIER_BACKEND=finetuned|llm|rules, FINETUNED_MODEL (HF repo id),
 CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DISTANCE, MAX_LOG_CHARS, DISABLE_UI.
 
 ## Status checklist (update as you go)
@@ -35,6 +35,7 @@ CLASSIFIER_FALLBACK, EMBEDDING_MODEL (or "hash" offline), RAG_TOP_K, RAG_MAX_DIS
 
 ## Issues encountered (and the fixes kept in the repo)
 - Groq retired `llama-3.3-70b-versatile`; `openai/gpt-oss-120b` spends the 80-token classifier budget on hidden reasoning. Switched to `qwen/qwen3.8-27b` everywhere.
+- Groq free tier also caps each model at 200,000 tokens/day (rolling): the 27B model's quota ran out after the Colab baseline + repeated smoke tests -> `LLM_FALLBACK_MODEL=openai/gpt-oss-120b` is used automatically on a per-day 429 (the answering model is recorded in `analysis.model`).
 - Groq free tier = 8,000 tokens/min: smoke-test bursts hit 429. Backend now honours `Retry-After` (<=30 s) with `LLM_MAX_RETRIES=2`; `SMOKE_PAUSE_S` spaces out samples.
 - Invalid API key returned 200 with an empty template report (every node swallowed BackendError). Permanent kinds (missing/invalid key, unknown model) now raise -> HTTP 503; transient ones still degrade. Tests added.
 - pytest collected `scripts/smoke_test.py` (filename pattern) -> `pytest.ini` with `testpaths = tests`.

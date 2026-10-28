@@ -1,3 +1,4 @@
+import json
 import pandas as pd
 import pytest
 
@@ -33,3 +34,46 @@ def test_rules_classifier_on_dataset_is_reasonable():
 def test_settings_hide_key():
     s = Settings(llm_api_key="gsk_secret_value_123456")
     assert "gsk_secret" not in repr(s) and "llm_api_key" not in s.public_summary()
+
+
+
+def test_backend_falls_back_to_secondary_model_on_daily_quota(monkeypatch):
+    import httpx
+    from app.config import Settings
+    from app.llm import OpenAICompatibleBackend
+    calls = []
+
+    def handler(request: httpx.Request):
+        body = json.loads(request.content)
+        calls.append(body["model"])
+        if body["model"] == "primary":
+            return httpx.Response(429, json={"error": {"message": "Rate limit reached ... on tokens per day (TPD): Limit 200000"}})
+        return httpx.Response(200, json={"model": "secondary", "choices": [{"message": {"content": "{\"ok\": true}"}}],
+                                         "usage": {"prompt_tokens": 1, "completion_tokens": 1}})
+    s = Settings(llm_api_key="k", llm_model="primary", llm_fallback_model="secondary", llm_max_retries=2)
+    b = OpenAICompatibleBackend(s)
+    b._client = httpx.Client(base_url="https://x", transport=httpx.MockTransport(handler))
+    g = b.generate([{"role": "user", "content": "hi"}], json_mode=True)
+    assert g.model == "secondary" and g.text == '{"ok": true}'
+    assert calls == ["primary", "secondary"]          # no sleeps/retries on a daily-quota 429, one fallback call
+
+
+def test_backend_per_minute_429_retries_then_falls_back(monkeypatch):
+    import httpx
+    from app.config import Settings
+    from app.llm import OpenAICompatibleBackend
+    import app.llm as llm_mod
+    monkeypatch.setattr(llm_mod.time, "sleep", lambda s: None)
+    calls = []
+
+    def handler(request: httpx.Request):
+        body = json.loads(request.content)
+        calls.append(body["model"])
+        if body["model"] == "primary":
+            return httpx.Response(429, headers={"retry-after": "1"}, json={"error": {"message": "tokens per minute (TPM)"}})
+        return httpx.Response(200, json={"model": "secondary", "choices": [{"message": {"content": "ok"}}]})
+    s = Settings(llm_api_key="k", llm_model="primary", llm_fallback_model="secondary", llm_max_retries=2)
+    b = OpenAICompatibleBackend(s)
+    b._client = httpx.Client(base_url="https://x", transport=httpx.MockTransport(handler))
+    assert b.generate([{"role": "user", "content": "hi"}]).model == "secondary"
+    assert calls == ["primary", "primary", "primary", "secondary"]
