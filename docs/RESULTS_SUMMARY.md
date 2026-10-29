@@ -156,12 +156,14 @@ Redaction counts returned by the API: `{"api_key": 1, "jwt": 1, "password_kv": 2
 - `swagger_docs.png` — OpenAPI docs at /docs.
 - `terminal_pytest.png` — pytest -q: 17 passed (offline suite).
 - `terminal_smoke_test.png` — Local smoke test with CLASSIFIER_BACKEND=finetuned.
-- `ui_about_tab.png` — About tab with project, model, repo and demo links.
+- `ui_about_tab.png` — About tab: pipeline steps, lab concepts table and project links.
 - `ui_analyze_crashloop.png` — Live UI: sample 05 (Kubernetes CrashLoopBackOff, prod).
 - `ui_analyze_prod_db.png` — Live UI: sample 01 (DB pool exhausted, prod) → P1 badge, root cause, evidence, fix steps; classifier qlora_finetuned.
-- `ui_architecture_tab.png` — Architecture tab: LangGraph node diagram and component list.
-- `ui_comparison_charts.png` — Model comparison tab: the six charts.
-- `ui_comparison_tab.png` — Model comparison tab: summary table from results/comparison_summary.md.
+- `ui_architecture_tab.png` — Architecture tab: SVG LangGraph diagram (happy path and fallback edges), component cards, request lifecycle.
+- `ui_comparison_charts.png` — Model comparison tab: the six charts, embedded inline so they render on any container.
+- `ui_comparison_tab.png` — Model comparison tab: KPI tiles for the QLoRA run and the five-way summary table (results/comparison.json).
+- `ui_dark_analyze.png` — Analyze tab in Gradio's dark theme (custom CSS uses theme variables, so text stays readable).
+- `ui_dark_architecture.png` — Architecture tab in the dark theme: SVG LangGraph diagram and component cards.
 - `ui_lowconfidence.png` — Live UI: sample 07 (noise only) → ungrounded, flagged 'needs human review'.
 - `ui_report.png` — Generated incident report (Markdown) for sample 01.
 - `ui_sources.png` — RAG sources accordion: runbook sections and known-error record with FAISS distances.

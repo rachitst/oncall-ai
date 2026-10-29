@@ -273,6 +273,6 @@ def api_fallback(rest: str, request: Request):
 if os.getenv("DISABLE_UI", "").lower() not in {"1", "true"}:
     import gradio as gr
 
-    from .ui import build_ui
+    from .ui import CSS, HEAD, THEME, build_ui
 
-    app = gr.mount_gradio_app(app, build_ui(), path="/")
+    app = gr.mount_gradio_app(app, build_ui(), path="/", theme=THEME, css=CSS, head=HEAD)
